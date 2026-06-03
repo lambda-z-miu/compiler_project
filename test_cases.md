@@ -1,10 +1,10 @@
 ## test Cases:
 
 ```txt
-Ph,1,2,3-OMe(4,5);7R,4-[A](6,7);7R,2,5,7-=,4,=O,4-OMe;[A;NC=OC]
-Ph,1,2,3-OMe(4,5);7R,4-[NC=OC](6,7);7R,2,5,7-=,4,=O,4-OMe;
+Ph,1,2,3-OMe(4,5);7R,4-[A](6,7);7R,2,5,7-=,4,=O,5-OMe;[A;NC=OC]
+Ph,1,2,3-OMe(4,5);7R,4-[NC=OC](6,7);7R,2,5,7-=,4,=O,5-OMe;
 
-(0)Ph,1,2,3-Me,(4,5);(1,2)7R,4-[(1)NC=OC,(1)](6,7);(1,2)7R,2,5,7-=,4-=O,4-OMe,(0,0);
+(0)Ph,1,2,3-Me,(4,5);(1,2)7R,4-[(1)NC=OC,(1)](6,7);(1,2)7R,2,5,7-=,4-=O,5-OMe,(0,0);
 
 (1)Ph(1);(1)Ph(1);
 (0)Ph,1-Me,(3);(1)Ph,(0);
@@ -25,72 +25,72 @@ Digit   2       8
 Sep     ,       9
 Digit   3       10
 Haf     -       11
-Keyword OMe     12
-Sep     ,       15
-LParen  (       16
-Digit   4       17
-Sep     ,       18
-Digit   5       19
-RParen  )       20
-Semi    ;       21
-LParen  (       22
-Digit   1       23
-Sep     ,       24
-Digit   2       25
-RParen  )       26
-Keyword 7R      27
-Sep     ,       29
-Digit   4       30
-Haf     -       31
-LStr    [       32
-LParen  (       33
-Digit   1       34
-RParen  )       35
-Keyword N       36
-Keyword C       37
-Keyword =O      38
-Keyword C       40
-Sep     ,       41
-LParen  (       42
-Digit   1       43
-RParen  )       44
-RStr    ]       45
-LParen  (       46
-Digit   6       47
-Sep     ,       48
-Digit   7       49
-RParen  )       50
-Semi    ;       51
-LParen  (       52
-Digit   1       53
-Sep     ,       54
-Digit   2       55
-RParen  )       56
-Keyword 7R      57
-Sep     ,       59
-Digit   2       60
-Sep     ,       61
-Digit   5       62
-Sep     ,       63
-Digit   7       64
-Haf     -       65
-Keyword =       66
-Sep     ,       67
-Digit   4       68
-Haf     -       69
-Keyword =O      70
-Sep     ,       72
-Digit   4       73
-Haf     -       74
-Keyword OMe     75
-Sep     ,       78
-LParen  (       79
-Digit   0       80
-Sep     ,       81
-Digit   0       82
-RParen  )       83
-Semi    ;       84
-End             85
+Keyword Me      12
+Sep     ,       14
+LParen  (       15
+Digit   4       16
+Sep     ,       17
+Digit   5       18
+RParen  )       19
+Semi    ;       20
+LParen  (       21
+Digit   1       22
+Sep     ,       23
+Digit   2       24
+RParen  )       25
+Keyword 7R      26
+Sep     ,       28
+Digit   4       29
+Haf     -       30
+LStr    [       31
+LParen  (       32
+Digit   1       33
+RParen  )       34
+Keyword N       35
+Keyword C       36
+Keyword =O      37
+Keyword C       39
+Sep     ,       40
+LParen  (       41
+Digit   1       42
+RParen  )       43
+RStr    ]       44
+LParen  (       45
+Digit   6       46
+Sep     ,       47
+Digit   7       48
+RParen  )       49
+Semi    ;       50
+LParen  (       51
+Digit   1       52
+Sep     ,       53
+Digit   2       54
+RParen  )       55
+Keyword 7R      56
+Sep     ,       58
+Digit   2       59
+Sep     ,       60
+Digit   5       61
+Sep     ,       62
+Digit   7       63
+Haf     -       64
+Keyword =       65
+Sep     ,       66
+Digit   4       67
+Haf     -       68
+Keyword =O      69
+Sep     ,       71
+Digit   5       72
+Haf     -       73
+Keyword OMe     74
+Sep     ,       77
+LParen  (       78
+Digit   0       79
+Sep     ,       80
+Digit   0       81
+RParen  )       82
+Semi    ;       83
+End             84
 AST:
 CPO #1:
   Interface L:
@@ -99,7 +99,7 @@ CPO #1:
   Subs: entry
     Poses: 1, 2, 3
     Sub Core:
-      Core: OMe
+      Core: Me
   Interface R:
     Poses: 4, 5
 CPO #2:
@@ -132,10 +132,36 @@ CPO #3:
           Core: =O
         Next:
           Subs: entry
-            Poses: 4
+            Poses: 5
             Sub Core:
               Core: OMe
   Interface R:
     Poses: 0, 0
-
-```
+    
+IR:
+C(1,2,2,6,7,0,0)
+C(2,3,1,1,8,0,0)
+C(3,4,4,2,9,0,0)
+C(4,5,3,3,16,0,0)
+C(5,6,6,4,12,0,0)
+C(6,1,5,0,0,0,0)
+C(7,1,0,0,0,0,0)
+C(8,2,0,0,0,0,0)
+C(9,3,0,0,0,0,0)
+C(12,5,13,0,0,0,0)
+C(13,12,14,17,0,0,0)
+C(14,13,15,0,0,0,0)
+C(15,14,16,27,27,0,0)
+C(16,4,15,23,23,0,0)
+N(17,13,18,0,0,0,0)
+C(18,17,19,19,20,0,0)
+O(19,18,18,0,0,0,0)
+C(20,18,0,0,0,0,0)
+C(23,16,16,24,0,0,0)
+C(24,23,25,28,28,0,0)
+C(25,24,26,26,29,0,0)
+C(26,25,25,27,0,0,0)
+C(27,15,15,26,0,0,0)
+O(28,24,24,0,0,0,0)
+O(29,25,30,0,0,0,0)
+C(30,29,0,0,0,0,0)

@@ -99,7 +99,7 @@ int rewriteId(int id, const std::map<int, int>& aliases) {
 }
 
 void shiftInt(int& value, int offset) {
-	if (value != 0) {
+	if (value > 0) {
 		value += offset;
 	}
 }
@@ -116,7 +116,9 @@ Fragment shiftFragment(Fragment frag, int offset) {
 		}
 	}
 	shiftInt(frag.entry, offset);
-	shiftInt(frag.exit, offset);
+	if (frag.exit) {
+		shiftInt(*frag.exit, offset);
+	}
 	for (int& value : frag.interfaceL) {
 		shiftInt(value, offset);
 	}
@@ -266,13 +268,18 @@ Fragment buildCore(const std::vector<std::string>& keywords) {
 			frag = std::move(next);
 			frag.entryBond = std::max(leadingBond, frag.entryBond);
 		} else {
-			int oldExit = frag.exit;
+			if (!frag.exit) {
+				throw std::runtime_error("Cannot extend terminal fragment before keyword " + lexeme);
+			}
+			int oldExit = *frag.exit;
 			int nextEntry = next.entry;
 			int order = std::max(pendingBond, next.entryBond);
 			appendIr(frag.ir, next.ir);
 			link(frag, oldExit, nextEntry, order);
 			frag.defaultNext.emplace(oldExit, nextEntry);
-			frag.exit = next.exit;
+			if (next.exit) {
+				frag.exit = next.exit;
+			}
 			mergeDefaultNext(frag.defaultNext, next.defaultNext);
 		}
 		pendingBond = 1;

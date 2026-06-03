@@ -153,27 +153,37 @@ KeywordInfo translateKeyword(const std::string& lexeme) {
 	}
 	if (lexeme == "Me") {
 		kw.frag = makeSingleAtom("C");
+		kw.frag.exit = std::nullopt;
 		return kw;
 	}
 	if (lexeme == "Ac") {
 		kw.frag = makeAc();
+		kw.frag.exit = std::nullopt;
 		return kw;
 	}
 	if (lexeme == "=O") {
 		kw.frag = makeSingleAtom("O");
 		kw.frag.entryBond = 2;
+		kw.frag.exit = std::nullopt;
 		return kw;
 	}
 	if (lexeme == "OMe") {
 		kw.frag = makeOMe();
+		kw.frag.exit = std::nullopt;
 		return kw;
 	}
 	if (lexeme == "OPh") {
 		kw.frag = makeOPh();
+		kw.frag.exit = std::nullopt;
 		return kw;
 	}
-	if (lexeme == "C" || lexeme == "P" || lexeme == "N" || lexeme == "F" || lexeme == "Cl" || lexeme == "Br" || lexeme == "I") {
+	if (lexeme == "C" || lexeme == "P" || lexeme == "N") {
 		kw.frag = makeSingleAtom(lexeme);
+		return kw;
+	}
+	if (lexeme == "F" || lexeme == "Cl" || lexeme == "Br" || lexeme == "I") {
+		kw.frag = makeSingleAtom(lexeme);
+		kw.frag.exit = std::nullopt;
 		return kw;
 	}
 
