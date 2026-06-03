@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/parser.dir/parser.cpp.o CMakeFiles/parser.dir/tokenizer.cpp.o CMakeFiles/parser.dir/Translation.cpp.o CMakeFiles/parser.dir/Keyword.cpp.o -o parser 
