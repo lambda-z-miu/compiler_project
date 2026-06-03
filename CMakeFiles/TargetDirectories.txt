@@ -1,0 +1,4 @@
+/home/heziy/compiler_project/CMakeFiles/tokenizer.dir
+/home/heziy/compiler_project/CMakeFiles/parser.dir
+/home/heziy/compiler_project/CMakeFiles/edit_cache.dir
+/home/heziy/compiler_project/CMakeFiles/rebuild_cache.dir

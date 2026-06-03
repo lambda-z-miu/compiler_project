@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/tokenizer.dir/tokenizer_main.cpp.o CMakeFiles/tokenizer.dir/tokenizer.cpp.o -o tokenizer 
