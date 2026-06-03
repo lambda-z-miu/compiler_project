@@ -18,12 +18,12 @@ Fragment makeSingleAtom(const std::string& atom) {
 Fragment makePh() {
 	Fragment frag;
 	frag.ir = {
-		makeNode("C", 1, {2, 6}),
-		makeNode("C", 2, {3, 1}),
-		makeNode("C", 3, {4, 2}),
-		makeNode("C", 4, {5, 3}),
-		makeNode("C", 5, {6, 4}),
-		makeNode("C", 6, {1, 5}),
+		makeNode("C", 1, {2 ,2, 6}),
+		makeNode("C", 2, {3, 1 ,1}),
+		makeNode("C", 3, {4, 4, 2}),
+		makeNode("C", 4, {5, 3, 3}),
+		makeNode("C", 5, {6, 6, 4}),
+		makeNode("C", 6, {1, 5,}),
 	};
 	frag.entry = 1;
 	frag.exit = 1;
