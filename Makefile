@@ -142,6 +142,54 @@ parser/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/parser.dir/build.make CMakeFiles/parser.dir/build
 .PHONY : parser/fast
 
+Keyword.o: Keyword.cpp.o
+.PHONY : Keyword.o
+
+# target to build an object file
+Keyword.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/parser.dir/build.make CMakeFiles/parser.dir/Keyword.cpp.o
+.PHONY : Keyword.cpp.o
+
+Keyword.i: Keyword.cpp.i
+.PHONY : Keyword.i
+
+# target to preprocess a source file
+Keyword.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/parser.dir/build.make CMakeFiles/parser.dir/Keyword.cpp.i
+.PHONY : Keyword.cpp.i
+
+Keyword.s: Keyword.cpp.s
+.PHONY : Keyword.s
+
+# target to generate assembly for a file
+Keyword.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/parser.dir/build.make CMakeFiles/parser.dir/Keyword.cpp.s
+.PHONY : Keyword.cpp.s
+
+Translation.o: Translation.cpp.o
+.PHONY : Translation.o
+
+# target to build an object file
+Translation.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/parser.dir/build.make CMakeFiles/parser.dir/Translation.cpp.o
+.PHONY : Translation.cpp.o
+
+Translation.i: Translation.cpp.i
+.PHONY : Translation.i
+
+# target to preprocess a source file
+Translation.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/parser.dir/build.make CMakeFiles/parser.dir/Translation.cpp.i
+.PHONY : Translation.cpp.i
+
+Translation.s: Translation.cpp.s
+.PHONY : Translation.s
+
+# target to generate assembly for a file
+Translation.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/parser.dir/build.make CMakeFiles/parser.dir/Translation.cpp.s
+.PHONY : Translation.cpp.s
+
 parser.o: parser.cpp.o
 .PHONY : parser.o
 
@@ -227,6 +275,12 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... parser"
 	@echo "... tokenizer"
+	@echo "... Keyword.o"
+	@echo "... Keyword.i"
+	@echo "... Keyword.s"
+	@echo "... Translation.o"
+	@echo "... Translation.i"
+	@echo "... Translation.s"
 	@echo "... parser.o"
 	@echo "... parser.i"
 	@echo "... parser.s"

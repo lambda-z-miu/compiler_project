@@ -8,6 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/heziy/compiler_project/Keyword.cpp" "CMakeFiles/parser.dir/Keyword.cpp.o" "gcc" "CMakeFiles/parser.dir/Keyword.cpp.o.d"
+  "/home/heziy/compiler_project/Translation.cpp" "CMakeFiles/parser.dir/Translation.cpp.o" "gcc" "CMakeFiles/parser.dir/Translation.cpp.o.d"
   "/home/heziy/compiler_project/parser.cpp" "CMakeFiles/parser.dir/parser.cpp.o" "gcc" "CMakeFiles/parser.dir/parser.cpp.o.d"
   "/home/heziy/compiler_project/tokenizer.cpp" "CMakeFiles/parser.dir/tokenizer.cpp.o" "gcc" "CMakeFiles/parser.dir/tokenizer.cpp.o.d"
   )

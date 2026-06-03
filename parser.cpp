@@ -1,3 +1,5 @@
+#include "Ast.h"
+#include "Translation.h"
 #include "tokenizer.h"
 
 #include <iostream>
@@ -6,58 +8,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-
-struct Poses {
-	std::vector<int> values;
-};
-
-struct Core {
-	std::vector<std::string> keywords;
-};
-
-struct Sub {
-	enum class Kind {
-		Identifier,
-		Core
-	};
-
-	Kind kind = Kind::Identifier;
-	std::string identifier;
-	Core core;
-};
-
-struct Interface {
-	Poses poses;
-};
-
-struct Cpo;
-
-struct Subs {
-	enum class Kind {
-		Empty,
-		BareSub,
-		Entry
-	};
-
-	Kind kind = Kind::Empty;
-	Sub bareSub;
-	Poses poses;
-	bool isGroup = false;
-	Sub sub;
-	std::unique_ptr<Cpo> group;
-	std::unique_ptr<Subs> next;
-};
-
-struct Cpo {
-	Interface left;
-	Core core;
-	Subs subs;
-	Interface right;
-};
-
-struct Cpd {
-	std::vector<Cpo> items;
-};
 
 class Parser {
 public:
@@ -69,6 +19,7 @@ public:
 			cpd.items.push_back(parseCpo());
 			expect(TokenType::Semi, "Expected ';' after CPO");
 		}
+		expect(TokenType::End, "Expected end of input");
 		return cpd;
 	}
 
@@ -162,7 +113,11 @@ private:
 			subs.isGroup = true;
 			subs.group = std::make_unique<Cpo>(parseCpo());
 			expect(TokenType::RStr, "Expected ']' after CPO");
-			expect(TokenType::Sep, "Expected ',' after ']' in SUBS'");
+			if (check(TokenType::Sep)) {
+				advance();
+			} else {
+				return subs;
+			}
 		} else if (isStartSub()) {
 			subs.isGroup = false;
 			subs.sub = parseSub();
@@ -296,7 +251,16 @@ static void printCpd(const Cpd& cpd) {
 
 int main() {
 	std::string input;
-	std::cin >> input;
+	std::string line;
+	while (std::getline(std::cin, line)) {
+		if (!input.empty()) {
+			input += '\n';
+		}
+		input += line;
+	}
+	if (input.empty()) {
+		return 0;
+	}
 
 	try {
 		Tokenizer tokenizer(input);
@@ -309,6 +273,8 @@ int main() {
 		Parser parser(std::move(tokens));
 		Cpd ast = parser.parseCpd();
 		printCpd(ast);
+		Fragment ir = translateCpd(ast);
+		printIr(ir, std::cout);
 	} catch (const std::exception& ex) {
 		std::cerr << "Error: " << ex.what() << "\n";
 		return 1;

@@ -13,4 +13,6 @@ add_executable(tokenizer
 add_executable(parser
     parser.cpp
     tokenizer.cpp
+    Translation.cpp
+    Keyword.cpp
 )
