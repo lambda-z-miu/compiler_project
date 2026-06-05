@@ -1,0 +1,9 @@
+{
+  "name": "com.compiler_project.my_chem",
+  "description": "my-Chem C++ renderer native messaging host",
+  "path": "@HOST_PATH@",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://@EXTENSION_ID@/"
+  ]
+}

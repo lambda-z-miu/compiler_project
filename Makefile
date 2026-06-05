@@ -117,6 +117,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named compiler_core
+
+# Build rule for target.
+compiler_core: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 compiler_core
+.PHONY : compiler_core
+
+# fast build rule for target.
+compiler_core/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_core.dir/build.make CMakeFiles/compiler_core.dir/build
+.PHONY : compiler_core/fast
+
+#=============================================================================
 # Target rules for targets named tokenizer
 
 # Build rule for target.
@@ -142,12 +155,62 @@ parser/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/parser.dir/build.make CMakeFiles/parser.dir/build
 .PHONY : parser/fast
 
+#=============================================================================
+# Target rules for targets named chem_native_host
+
+# Build rule for target.
+chem_native_host: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 chem_native_host
+.PHONY : chem_native_host
+
+# fast build rule for target.
+chem_native_host/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/chem_native_host.dir/build.make CMakeFiles/chem_native_host.dir/build
+.PHONY : chem_native_host/fast
+
+#=============================================================================
+# Target rules for targets named chem_http_server
+
+# Build rule for target.
+chem_http_server: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 chem_http_server
+.PHONY : chem_http_server
+
+# fast build rule for target.
+chem_http_server/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/chem_http_server.dir/build.make CMakeFiles/chem_http_server.dir/build
+.PHONY : chem_http_server/fast
+
+ChemRenderer.o: ChemRenderer.cpp.o
+.PHONY : ChemRenderer.o
+
+# target to build an object file
+ChemRenderer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_core.dir/build.make CMakeFiles/compiler_core.dir/ChemRenderer.cpp.o
+.PHONY : ChemRenderer.cpp.o
+
+ChemRenderer.i: ChemRenderer.cpp.i
+.PHONY : ChemRenderer.i
+
+# target to preprocess a source file
+ChemRenderer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_core.dir/build.make CMakeFiles/compiler_core.dir/ChemRenderer.cpp.i
+.PHONY : ChemRenderer.cpp.i
+
+ChemRenderer.s: ChemRenderer.cpp.s
+.PHONY : ChemRenderer.s
+
+# target to generate assembly for a file
+ChemRenderer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_core.dir/build.make CMakeFiles/compiler_core.dir/ChemRenderer.cpp.s
+.PHONY : ChemRenderer.cpp.s
+
 Keyword.o: Keyword.cpp.o
 .PHONY : Keyword.o
 
 # target to build an object file
 Keyword.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/parser.dir/build.make CMakeFiles/parser.dir/Keyword.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_core.dir/build.make CMakeFiles/compiler_core.dir/Keyword.cpp.o
 .PHONY : Keyword.cpp.o
 
 Keyword.i: Keyword.cpp.i
@@ -155,7 +218,7 @@ Keyword.i: Keyword.cpp.i
 
 # target to preprocess a source file
 Keyword.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/parser.dir/build.make CMakeFiles/parser.dir/Keyword.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_core.dir/build.make CMakeFiles/compiler_core.dir/Keyword.cpp.i
 .PHONY : Keyword.cpp.i
 
 Keyword.s: Keyword.cpp.s
@@ -163,15 +226,63 @@ Keyword.s: Keyword.cpp.s
 
 # target to generate assembly for a file
 Keyword.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/parser.dir/build.make CMakeFiles/parser.dir/Keyword.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_core.dir/build.make CMakeFiles/compiler_core.dir/Keyword.cpp.s
 .PHONY : Keyword.cpp.s
+
+Parser.o: Parser.cpp.o
+.PHONY : Parser.o
+
+# target to build an object file
+Parser.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_core.dir/build.make CMakeFiles/compiler_core.dir/Parser.cpp.o
+.PHONY : Parser.cpp.o
+
+Parser.i: Parser.cpp.i
+.PHONY : Parser.i
+
+# target to preprocess a source file
+Parser.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_core.dir/build.make CMakeFiles/compiler_core.dir/Parser.cpp.i
+.PHONY : Parser.cpp.i
+
+Parser.s: Parser.cpp.s
+.PHONY : Parser.s
+
+# target to generate assembly for a file
+Parser.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_core.dir/build.make CMakeFiles/compiler_core.dir/Parser.cpp.s
+.PHONY : Parser.cpp.s
+
+SvgRenderer.o: SvgRenderer.cpp.o
+.PHONY : SvgRenderer.o
+
+# target to build an object file
+SvgRenderer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_core.dir/build.make CMakeFiles/compiler_core.dir/SvgRenderer.cpp.o
+.PHONY : SvgRenderer.cpp.o
+
+SvgRenderer.i: SvgRenderer.cpp.i
+.PHONY : SvgRenderer.i
+
+# target to preprocess a source file
+SvgRenderer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_core.dir/build.make CMakeFiles/compiler_core.dir/SvgRenderer.cpp.i
+.PHONY : SvgRenderer.cpp.i
+
+SvgRenderer.s: SvgRenderer.cpp.s
+.PHONY : SvgRenderer.s
+
+# target to generate assembly for a file
+SvgRenderer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_core.dir/build.make CMakeFiles/compiler_core.dir/SvgRenderer.cpp.s
+.PHONY : SvgRenderer.cpp.s
 
 Translation.o: Translation.cpp.o
 .PHONY : Translation.o
 
 # target to build an object file
 Translation.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/parser.dir/build.make CMakeFiles/parser.dir/Translation.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_core.dir/build.make CMakeFiles/compiler_core.dir/Translation.cpp.o
 .PHONY : Translation.cpp.o
 
 Translation.i: Translation.cpp.i
@@ -179,7 +290,7 @@ Translation.i: Translation.cpp.i
 
 # target to preprocess a source file
 Translation.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/parser.dir/build.make CMakeFiles/parser.dir/Translation.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_core.dir/build.make CMakeFiles/compiler_core.dir/Translation.cpp.i
 .PHONY : Translation.cpp.i
 
 Translation.s: Translation.cpp.s
@@ -187,8 +298,56 @@ Translation.s: Translation.cpp.s
 
 # target to generate assembly for a file
 Translation.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/parser.dir/build.make CMakeFiles/parser.dir/Translation.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_core.dir/build.make CMakeFiles/compiler_core.dir/Translation.cpp.s
 .PHONY : Translation.cpp.s
+
+http_server.o: http_server.cpp.o
+.PHONY : http_server.o
+
+# target to build an object file
+http_server.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/chem_http_server.dir/build.make CMakeFiles/chem_http_server.dir/http_server.cpp.o
+.PHONY : http_server.cpp.o
+
+http_server.i: http_server.cpp.i
+.PHONY : http_server.i
+
+# target to preprocess a source file
+http_server.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/chem_http_server.dir/build.make CMakeFiles/chem_http_server.dir/http_server.cpp.i
+.PHONY : http_server.cpp.i
+
+http_server.s: http_server.cpp.s
+.PHONY : http_server.s
+
+# target to generate assembly for a file
+http_server.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/chem_http_server.dir/build.make CMakeFiles/chem_http_server.dir/http_server.cpp.s
+.PHONY : http_server.cpp.s
+
+native_host.o: native_host.cpp.o
+.PHONY : native_host.o
+
+# target to build an object file
+native_host.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/chem_native_host.dir/build.make CMakeFiles/chem_native_host.dir/native_host.cpp.o
+.PHONY : native_host.cpp.o
+
+native_host.i: native_host.cpp.i
+.PHONY : native_host.i
+
+# target to preprocess a source file
+native_host.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/chem_native_host.dir/build.make CMakeFiles/chem_native_host.dir/native_host.cpp.i
+.PHONY : native_host.cpp.i
+
+native_host.s: native_host.cpp.s
+.PHONY : native_host.s
+
+# target to generate assembly for a file
+native_host.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/chem_native_host.dir/build.make CMakeFiles/chem_native_host.dir/native_host.cpp.s
+.PHONY : native_host.cpp.s
 
 parser.o: parser.cpp.o
 .PHONY : parser.o
@@ -219,8 +378,7 @@ tokenizer.o: tokenizer.cpp.o
 
 # target to build an object file
 tokenizer.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/tokenizer.dir/build.make CMakeFiles/tokenizer.dir/tokenizer.cpp.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/parser.dir/build.make CMakeFiles/parser.dir/tokenizer.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_core.dir/build.make CMakeFiles/compiler_core.dir/tokenizer.cpp.o
 .PHONY : tokenizer.cpp.o
 
 tokenizer.i: tokenizer.cpp.i
@@ -228,8 +386,7 @@ tokenizer.i: tokenizer.cpp.i
 
 # target to preprocess a source file
 tokenizer.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/tokenizer.dir/build.make CMakeFiles/tokenizer.dir/tokenizer.cpp.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/parser.dir/build.make CMakeFiles/parser.dir/tokenizer.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_core.dir/build.make CMakeFiles/compiler_core.dir/tokenizer.cpp.i
 .PHONY : tokenizer.cpp.i
 
 tokenizer.s: tokenizer.cpp.s
@@ -237,8 +394,7 @@ tokenizer.s: tokenizer.cpp.s
 
 # target to generate assembly for a file
 tokenizer.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/tokenizer.dir/build.make CMakeFiles/tokenizer.dir/tokenizer.cpp.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/parser.dir/build.make CMakeFiles/parser.dir/tokenizer.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_core.dir/build.make CMakeFiles/compiler_core.dir/tokenizer.cpp.s
 .PHONY : tokenizer.cpp.s
 
 tokenizer_main.o: tokenizer_main.cpp.o
@@ -273,14 +429,32 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... chem_http_server"
+	@echo "... chem_native_host"
+	@echo "... compiler_core"
 	@echo "... parser"
 	@echo "... tokenizer"
+	@echo "... ChemRenderer.o"
+	@echo "... ChemRenderer.i"
+	@echo "... ChemRenderer.s"
 	@echo "... Keyword.o"
 	@echo "... Keyword.i"
 	@echo "... Keyword.s"
+	@echo "... Parser.o"
+	@echo "... Parser.i"
+	@echo "... Parser.s"
+	@echo "... SvgRenderer.o"
+	@echo "... SvgRenderer.i"
+	@echo "... SvgRenderer.s"
 	@echo "... Translation.o"
 	@echo "... Translation.i"
 	@echo "... Translation.s"
+	@echo "... http_server.o"
+	@echo "... http_server.i"
+	@echo "... http_server.s"
+	@echo "... native_host.o"
+	@echo "... native_host.i"
+	@echo "... native_host.s"
 	@echo "... parser.o"
 	@echo "... parser.i"
 	@echo "... parser.s"

@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "my-Chem Renderer",
+  "version": "0.1.0",
+  "description": "Render <my-Chem> custom chemistry language blocks as SVG molecules.",
+  "permissions": ["nativeMessaging"],
+  "host_permissions": ["http://127.0.0.1:17654/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": true,
+      "match_about_blank": true
+    }
+  ]
+}
