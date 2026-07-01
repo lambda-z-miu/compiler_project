@@ -68,6 +68,9 @@ bool isVisibleAtom(const RenderNode& node, int degree) {
 }
 
 std::string atomColor(const std::string& atom) {
+	if (atom == "H") {
+		return "#444444";
+	}
 	if (atom == "O") {
 		return "#d12c2c";
 	}
@@ -76,6 +79,9 @@ std::string atomColor(const std::string& atom) {
 	}
 	if (atom == "P") {
 		return "#b45f06";
+	}
+	if (atom == "S") {
+		return "#c49a00";
 	}
 	if (atom == "F" || atom == "Cl" || atom == "Br" || atom == "I") {
 		return "#167a3a";
@@ -121,6 +127,9 @@ std::vector<RenderEdge> makeEdges(const Fragment& frag) {
 
 #ifdef COMPILER_PROJECT_HAVE_RDKIT
 int atomicNumberFor(const std::string& atom) {
+	if (atom == "H") {
+		return 1;
+	}
 	if (atom == "C") {
 		return 6;
 	}
@@ -135,6 +144,9 @@ int atomicNumberFor(const std::string& atom) {
 	}
 	if (atom == "P") {
 		return 15;
+	}
+	if (atom == "S") {
+		return 16;
 	}
 	if (atom == "Cl") {
 		return 17;

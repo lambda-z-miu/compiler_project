@@ -1,0 +1,1 @@
+/usr/bin/clang++ -g CMakeFiles/chem_native_host.dir/native_host.cpp.o -o chem_native_host  libcompiler_core.a /usr/lib/libRDKitMolDraw2D.so /usr/lib/libRDKitDepictor.so /usr/lib/libRDKitGraphMol.so /usr/lib/libRDKitRDGeneral.so /usr/lib/libRDKitDataStructs.so /usr/lib/x86_64-linux-gnu/libcairo.so 

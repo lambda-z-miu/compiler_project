@@ -77,6 +77,94 @@ Fragment makeOPh() {
 	return frag;
 }
 
+
+Fragment makeNH2() {
+	Fragment frag;
+	frag.ir = {
+		makeNode("N", 1, {2, 3}),
+		makeNode("H", 2, {1}),
+		makeNode("H", 3, {1}),
+	};
+	frag.entry = 1;
+	frag.exit = 1;
+	return frag;
+}
+
+Fragment makeOH() {
+	Fragment frag;
+	frag.ir = {
+		makeNode("O", 1, {2}),
+		makeNode("H", 2, {1}),
+	};
+	frag.entry = 1;
+	frag.exit = std::nullopt;
+	return frag;
+}
+
+
+Fragment makeSH() {
+	Fragment frag;
+	frag.ir = {
+		makeNode("S", 1, {2}),
+		makeNode("H", 2, {1}),
+	};
+	frag.entry = 1;
+	frag.exit = std::nullopt;
+	return frag;
+}
+
+Fragment makeIm() {
+	Fragment frag;
+	frag.ir = {
+		makeNode("C", 1, {2, 5}),
+		makeNode("N", 2, {1, 3}),
+		makeNode("C", 3, {2, 4}),
+		makeNode("N", 4, {3, 5, 6}),
+		makeNode("C", 5, {4, 1}),
+		makeNode("H", 6, {4}),
+	};
+	frag.entry = 1;
+	frag.exit = std::nullopt;
+	return frag;
+}
+
+Fragment makeInd() {
+	Fragment frag;
+	frag.ir = {
+		makeNode("C", 1, {2, 5}),
+		makeNode("C", 2, {1, 3}),
+		makeNode("N", 3, {2, 4, 10}),
+		makeNode("C", 4, {3, 5, 9}),
+		makeNode("C", 5, {4, 1, 6}),
+		makeNode("C", 6, {5, 7}),
+		makeNode("C", 7, {6, 8}),
+		makeNode("C", 8, {7, 9}),
+		makeNode("C", 9, {8, 4}),
+		makeNode("H", 10, {3}),
+	};
+	frag.entry = 1;
+	frag.exit = std::nullopt;
+	return frag;
+}
+
+Fragment makePyr() {
+	Fragment frag;
+	frag.ir = {
+		makeNode("N", 1, {2, 5, 6}),
+		makeNode("C", 2, {1, 3}),
+		makeNode("C", 3, {2, 4}),
+		makeNode("C", 4, {3, 5}),
+		makeNode("C", 5, {4, 1}),
+		makeNode("H", 6, {1}),
+	};
+	frag.entry = 2;
+	frag.exit = 2;
+	for (int i = 1; i <= 5; ++i) {
+		frag.defaultNext[i] = i == 5 ? 1 : i + 1;
+	}
+	return frag;
+}
+
 Fragment makeRing(int n) {
 	if (n < 3) {
 		throw std::runtime_error("Ring size must be at least 3");
@@ -177,7 +265,31 @@ KeywordInfo translateKeyword(const std::string& lexeme) {
 		kw.frag.exit = std::nullopt;
 		return kw;
 	}
-	if (lexeme == "C" || lexeme == "P" || lexeme == "N") {
+	if (lexeme == "NH2") {
+		kw.frag = makeNH2();
+		return kw;
+	}
+	if (lexeme == "OH") {
+		kw.frag = makeOH();
+		return kw;
+	}
+	if (lexeme == "SH") {
+		kw.frag = makeSH();
+		return kw;
+	}
+	if (lexeme == "Im") {
+		kw.frag = makeIm();
+		return kw;
+	}
+	if (lexeme == "Ind") {
+		kw.frag = makeInd();
+		return kw;
+	}
+	if (lexeme == "Pyr") {
+		kw.frag = makePyr();
+		return kw;
+	}
+	if (lexeme == "C" || lexeme == "P" || lexeme == "N" || lexeme == "S") {
 		kw.frag = makeSingleAtom(lexeme);
 		return kw;
 	}

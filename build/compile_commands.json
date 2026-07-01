@@ -1,0 +1,62 @@
+[
+{
+  "directory": "/home/heziy/compiler_project/build",
+  "command": "/usr/bin/clang++ -DCOMPILER_PROJECT_HAVE_RDKIT=1 -I/usr/include/rdkit -I/usr/include/cairo -g -std=c++20 -o CMakeFiles/compiler_core.dir/Parser.cpp.o -c /home/heziy/compiler_project/Parser.cpp",
+  "file": "/home/heziy/compiler_project/Parser.cpp",
+  "output": "CMakeFiles/compiler_core.dir/Parser.cpp.o"
+},
+{
+  "directory": "/home/heziy/compiler_project/build",
+  "command": "/usr/bin/clang++ -DCOMPILER_PROJECT_HAVE_RDKIT=1 -I/usr/include/rdkit -I/usr/include/cairo -g -std=c++20 -o CMakeFiles/compiler_core.dir/tokenizer.cpp.o -c /home/heziy/compiler_project/tokenizer.cpp",
+  "file": "/home/heziy/compiler_project/tokenizer.cpp",
+  "output": "CMakeFiles/compiler_core.dir/tokenizer.cpp.o"
+},
+{
+  "directory": "/home/heziy/compiler_project/build",
+  "command": "/usr/bin/clang++ -DCOMPILER_PROJECT_HAVE_RDKIT=1 -I/usr/include/rdkit -I/usr/include/cairo -g -std=c++20 -o CMakeFiles/compiler_core.dir/Translation.cpp.o -c /home/heziy/compiler_project/Translation.cpp",
+  "file": "/home/heziy/compiler_project/Translation.cpp",
+  "output": "CMakeFiles/compiler_core.dir/Translation.cpp.o"
+},
+{
+  "directory": "/home/heziy/compiler_project/build",
+  "command": "/usr/bin/clang++ -DCOMPILER_PROJECT_HAVE_RDKIT=1 -I/usr/include/rdkit -I/usr/include/cairo -g -std=c++20 -o CMakeFiles/compiler_core.dir/Keyword.cpp.o -c /home/heziy/compiler_project/Keyword.cpp",
+  "file": "/home/heziy/compiler_project/Keyword.cpp",
+  "output": "CMakeFiles/compiler_core.dir/Keyword.cpp.o"
+},
+{
+  "directory": "/home/heziy/compiler_project/build",
+  "command": "/usr/bin/clang++ -DCOMPILER_PROJECT_HAVE_RDKIT=1 -I/usr/include/rdkit -I/usr/include/cairo -g -std=c++20 -o CMakeFiles/compiler_core.dir/SvgRenderer.cpp.o -c /home/heziy/compiler_project/SvgRenderer.cpp",
+  "file": "/home/heziy/compiler_project/SvgRenderer.cpp",
+  "output": "CMakeFiles/compiler_core.dir/SvgRenderer.cpp.o"
+},
+{
+  "directory": "/home/heziy/compiler_project/build",
+  "command": "/usr/bin/clang++ -DCOMPILER_PROJECT_HAVE_RDKIT=1 -I/usr/include/rdkit -I/usr/include/cairo -g -std=c++20 -o CMakeFiles/compiler_core.dir/ChemRenderer.cpp.o -c /home/heziy/compiler_project/ChemRenderer.cpp",
+  "file": "/home/heziy/compiler_project/ChemRenderer.cpp",
+  "output": "CMakeFiles/compiler_core.dir/ChemRenderer.cpp.o"
+},
+{
+  "directory": "/home/heziy/compiler_project/build",
+  "command": "/usr/bin/clang++   -g -std=c++20 -o CMakeFiles/tokenizer.dir/tokenizer_main.cpp.o -c /home/heziy/compiler_project/tokenizer_main.cpp",
+  "file": "/home/heziy/compiler_project/tokenizer_main.cpp",
+  "output": "CMakeFiles/tokenizer.dir/tokenizer_main.cpp.o"
+},
+{
+  "directory": "/home/heziy/compiler_project/build",
+  "command": "/usr/bin/clang++   -g -std=c++20 -o CMakeFiles/parser.dir/parser.cpp.o -c /home/heziy/compiler_project/parser.cpp",
+  "file": "/home/heziy/compiler_project/parser.cpp",
+  "output": "CMakeFiles/parser.dir/parser.cpp.o"
+},
+{
+  "directory": "/home/heziy/compiler_project/build",
+  "command": "/usr/bin/clang++   -g -std=c++20 -o CMakeFiles/chem_native_host.dir/native_host.cpp.o -c /home/heziy/compiler_project/native_host.cpp",
+  "file": "/home/heziy/compiler_project/native_host.cpp",
+  "output": "CMakeFiles/chem_native_host.dir/native_host.cpp.o"
+},
+{
+  "directory": "/home/heziy/compiler_project/build",
+  "command": "/usr/bin/clang++   -g -std=c++20 -o CMakeFiles/chem_http_server.dir/http_server.cpp.o -c /home/heziy/compiler_project/http_server.cpp",
+  "file": "/home/heziy/compiler_project/http_server.cpp",
+  "output": "CMakeFiles/chem_http_server.dir/http_server.cpp.o"
+}
+]

@@ -1,0 +1,2 @@
+/usr/bin/llvm-ar qc libcompiler_core.a CMakeFiles/compiler_core.dir/Parser.cpp.o CMakeFiles/compiler_core.dir/tokenizer.cpp.o CMakeFiles/compiler_core.dir/Translation.cpp.o CMakeFiles/compiler_core.dir/Keyword.cpp.o CMakeFiles/compiler_core.dir/SvgRenderer.cpp.o CMakeFiles/compiler_core.dir/ChemRenderer.cpp.o
+/usr/bin/llvm-ranlib libcompiler_core.a

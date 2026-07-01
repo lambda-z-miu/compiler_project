@@ -1,7 +1,7 @@
 对于TOKEN流，给出下列CFG，帮我解析成语法树
 TOKEN TYPE：
 1) SEP := ,
-2) KEYWORDS := ph | Me | Ac | = | # | =O | C | P | N | digit R | digit L | F | Cl | Br | I
+2) KEYWORDS := ph | Me | Ac | = | # | =O | NH2 | OH | SH | Im | Ind | Pyr | C | P | N | S | digit R | digit L | F | Cl | Br | I
 3) SEMI := ;
 4) identifier := [A-Z][A-Z]*
 5) LPAREN = (

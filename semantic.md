@@ -9,7 +9,7 @@ IR 是一个无序图，用节点表表示：
 ```txt
 GRAPH := NODE*
 NODE  := ATOM(self_id, conn1, conn2, conn3, conn4, conn5, conn6)
-ATOM  := C | P | O | N | F | Cl | Br | I
+ATOM  := H | C | P | O | N | S | F | Cl | Br | I
 ```
 
 约定：
@@ -504,8 +504,27 @@ KEYWORDS -> =O
     {
         kw.frag.IR = [ O(1,0,0,0,0,0,0) ]
         kw.frag.entry = 1
-        kw.frag.exit = 1
+        kw.frag.exit = None
         kw.frag.entryBond = 2
+    }
+```
+
+### NH2
+
+
+
+### OH
+
+```txt
+KEYWORDS -> OH
+    {
+        kw.frag.IR = [
+            O(1,2,0,0,0,0,0),
+            H(2,1,0,0,0,0,0)
+        ]
+        kw.frag.entry = 1
+        kw.frag.exit = None
+        kw.frag.entryBond = 1
     }
 ```
 
