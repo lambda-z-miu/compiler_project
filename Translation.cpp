@@ -408,7 +408,7 @@ Fragment connectFragments(Fragment left, Fragment right) {
 		Fragment shifted = shiftFragment(std::move(right), maxId(left));
 		int shiftedRightPort = firstNonZero(shifted.interfaceL);
 		appendIr(left.ir, shifted.ir);
-		link(left, leftPorts.front(), shiftedRightPort, 1);
+		link(left, leftPorts.front(), shiftedRightPort, shifted.entryBond);
 		left.interfaceR = shifted.interfaceR;
 		left.exit = firstNonZero(left.interfaceR);
 		mergeDefaultNext(left.defaultNext, shifted.defaultNext);

@@ -61,12 +61,12 @@ Fragment makeOPh() {
 	Fragment frag;
 	frag.ir = {
 		makeNode("O", 1, {2}),
-		makeNode("C", 2, {3, 7, 1}),
-		makeNode("C", 3, {4, 2}),
-		makeNode("C", 4, {5, 3}),
-		makeNode("C", 5, {6, 4}),
-		makeNode("C", 6, {7, 5}),
-		makeNode("C", 7, {2, 6}),
+		makeNode("C", 2, {3, 3, 7, 1}),
+		makeNode("C", 3, {2, 2, 4}),
+		makeNode("C", 4, {5, 5, 3}),
+		makeNode("C", 5, {4, 4, 6}),
+		makeNode("C", 6, {7, 7, 5}),
+		makeNode("C", 7, {6, 6, 2}),
 	};
 	frag.entry = 1;
 	frag.exit = 2;
@@ -116,11 +116,11 @@ Fragment makeSH() {
 Fragment makeIm() {
 	Fragment frag;
 	frag.ir = {
-		makeNode("C", 1, {2, 5}),
-		makeNode("N", 2, {1, 3}),
-		makeNode("C", 3, {2, 4}),
+		makeNode("C", 1, {2, 5, 5}),
+		makeNode("N", 2, {1, 3, 3}),
+		makeNode("C", 3, {2, 2, 4}),
 		makeNode("N", 4, {3, 5, 6}),
-		makeNode("C", 5, {4, 1}),
+		makeNode("C", 5, {4, 1, 1}),
 		makeNode("H", 6, {4}),
 	};
 	frag.entry = 1;
@@ -131,15 +131,15 @@ Fragment makeIm() {
 Fragment makeInd() {
 	Fragment frag;
 	frag.ir = {
-		makeNode("C", 1, {2, 5}),
-		makeNode("C", 2, {1, 3}),
+		makeNode("C", 1, {2, 2, 5}),
+		makeNode("C", 2, {1, 1, 3}),
 		makeNode("N", 3, {2, 4, 10}),
-		makeNode("C", 4, {3, 5, 9}),
-		makeNode("C", 5, {4, 1, 6}),
-		makeNode("C", 6, {5, 7}),
-		makeNode("C", 7, {6, 8}),
-		makeNode("C", 8, {7, 9}),
-		makeNode("C", 9, {8, 4}),
+		makeNode("C", 4, {3, 5, 5, 9}),
+		makeNode("C", 5, {4, 4, 1, 6}),
+		makeNode("C", 6, {5, 7, 7}),
+		makeNode("C", 7, {6, 6, 8}),
+		makeNode("C", 8, {7, 9, 9}),
+		makeNode("C", 9, {8, 8, 4}),
 		makeNode("H", 10, {3}),
 	};
 	frag.entry = 1;
@@ -159,6 +159,24 @@ Fragment makePyr() {
 	};
 	frag.entry = 2;
 	frag.exit = 2;
+	for (int i = 1; i <= 5; ++i) {
+		frag.defaultNext[i] = i == 5 ? 1 : i + 1;
+	}
+	return frag;
+}
+
+
+Fragment makeOx5() {
+	Fragment frag;
+	frag.ir = {
+		makeNode("O", 1, {2, 5}),
+		makeNode("C", 2, {1, 3}),
+		makeNode("C", 3, {2, 4}),
+		makeNode("C", 4, {3, 5}),
+		makeNode("C", 5, {4, 1}),
+	};
+	frag.entry = 1;
+	frag.exit = 1;
 	for (int i = 1; i <= 5; ++i) {
 		frag.defaultNext[i] = i == 5 ? 1 : i + 1;
 	}
@@ -287,6 +305,10 @@ KeywordInfo translateKeyword(const std::string& lexeme) {
 	}
 	if (lexeme == "Pyr") {
 		kw.frag = makePyr();
+		return kw;
+	}
+	if (lexeme == "Ox5") {
+		kw.frag = makeOx5();
 		return kw;
 	}
 	if (lexeme == "C" || lexeme == "P" || lexeme == "N" || lexeme == "S") {

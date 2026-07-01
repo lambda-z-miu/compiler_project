@@ -149,7 +149,7 @@ connectFragments(A, B):
         error "right fragment has no left interface"
 
     if len(R) == 1 and len(L) == 1:
-        link(A.IR ∪ B.IR, R[0], L[0], 1)
+        link(A.IR ∪ B.IR, R[0], L[0], B.entryBond)
         C.IR = merge(A.IR, B.IR)
     else if len(R) == 2 and len(L) == 2:
         C = fuse(A, R, B, L)
@@ -511,7 +511,17 @@ KEYWORDS -> =O
 
 ### NH2
 
-
+    KEYWORDS -> NH2
+        {
+            kw.frag.IR = [
+                N(1,2,3,0,0,0,0),
+                H(2,1,0,0,0,0,0),
+                H(3,1,0,0,0,0,0)
+            ]
+            kw.frag.entry = 1
+            kw.frag.exit = 1
+            kw.frag.entryBond = 1
+        }
 
 ### OH
 

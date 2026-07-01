@@ -90,7 +90,7 @@ Token Tokenizer::make(TokenType type, const std::string& lexeme) const {
 std::string Tokenizer::matchKeyword() const {
 	// longest match first
 	static const std::string keywords[] = {
-		"OMe", "OPh", "Ind", "Pyr", "NH2", "=O", "Ph", "Me", "Ac", "Cl", "Br", "OH", "SH", "Im", "=", "#", "C", "P", "N", "S", "F", "I"
+		"OMe", "OPh", "Ind", "Pyr", "Ox5", "NH2", "=O", "Ph", "Me", "Ac", "Cl", "Br", "OH", "SH", "Im", "=", "#", "C", "P", "N", "S", "F", "I"
 	};
 
 	// digitR / digitL (digit can be multiple characters)
