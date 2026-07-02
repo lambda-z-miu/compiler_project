@@ -21,6 +21,7 @@ private:
 	const Token& advance();
 	const Token& expect(TokenType type, const char* message);
 	bool isStartSub() const;
+	bool isStartInterface() const;
 
 	Cpo parseCpo();
 	Interface parseInterface();

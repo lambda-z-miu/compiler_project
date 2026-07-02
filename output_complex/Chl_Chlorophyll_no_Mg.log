@@ -126,135 +126,135 @@ Semi	;	143
 End		144
 AST:
 CPO #1:
-  Interface L:
+  Interface L (connect):
     Poses: 0
   Core: 16R
-  Subs: entry
+  Subs: entry attach
     Poses: 1
     Sub Core:
       Core: N
     Next:
-      Subs: entry
+      Subs: entry attach
         Poses: 5
         Sub Core:
           Core: N
         Next:
-          Subs: entry
+          Subs: entry attach
             Poses: 9
             Sub Core:
               Core: N
             Next:
-              Subs: entry
+              Subs: entry attach
                 Poses: 13
                 Sub Core:
                   Core: N
                 Next:
-                  Subs: entry
+                  Subs: entry attach
                     Poses: 1
                     Sub Core:
                       Core: =
                     Next:
-                      Subs: entry
+                      Subs: entry attach
                         Poses: 3
                         Sub Core:
                           Core: =
                         Next:
-                          Subs: entry
+                          Subs: entry attach
                             Poses: 5
                             Sub Core:
                               Core: =
                             Next:
-                              Subs: entry
+                              Subs: entry attach
                                 Poses: 7
                                 Sub Core:
                                   Core: =
                                 Next:
-                                  Subs: entry
+                                  Subs: entry attach
                                     Poses: 9
                                     Sub Core:
                                       Core: =
                                     Next:
-                                      Subs: entry
+                                      Subs: entry attach
                                         Poses: 11
                                         Sub Core:
                                           Core: =
                                         Next:
-                                          Subs: entry
+                                          Subs: entry attach
                                             Poses: 13
                                             Sub Core:
                                               Core: =
                                             Next:
-                                              Subs: entry
+                                              Subs: entry attach
                                                 Poses: 2
                                                 Sub Core:
                                                   Core: Me
                                                 Next:
-                                                  Subs: entry
+                                                  Subs: entry attach
                                                     Poses: 6
                                                     Sub Core:
                                                       Core: Me
                                                     Next:
-                                                      Subs: entry
+                                                      Subs: entry attach
                                                         Poses: 10
                                                         Group:
-                                                          Interface L:
+                                                          Interface L (connect):
                                                             Poses: 1
                                                           Core: 20L
-                                                          Subs: entry
+                                                          Subs: entry attach
                                                             Poses: 3
                                                             Sub Core:
                                                               Core: =
                                                             Next:
-                                                              Subs: entry
+                                                              Subs: entry attach
                                                                 Poses: 7
                                                                 Sub Core:
                                                                   Core: =
                                                                 Next:
-                                                                  Subs: entry
+                                                                  Subs: entry attach
                                                                     Poses: 11
                                                                     Sub Core:
                                                                       Core: =
                                                                     Next:
-                                                                      Subs: entry
+                                                                      Subs: entry attach
                                                                         Poses: 15
                                                                         Sub Core:
                                                                           Core: =
                                                                         Next:
-                                                                          Subs: entry
+                                                                          Subs: entry attach
                                                                             Poses: 3
                                                                             Sub Core:
                                                                               Core: Me
                                                                             Next:
-                                                                              Subs: entry
+                                                                              Subs: entry attach
                                                                                 Poses: 7
                                                                                 Sub Core:
                                                                                   Core: Me
                                                                                 Next:
-                                                                                  Subs: entry
+                                                                                  Subs: entry attach
                                                                                     Poses: 11
                                                                                     Sub Core:
                                                                                       Core: Me
                                                                                     Next:
-                                                                                      Subs: entry
+                                                                                      Subs: entry attach
                                                                                         Poses: 15
                                                                                         Sub Core:
                                                                                           Core: Me
-                                                          Interface R:
+                                                          Interface R (connect):
                                                             Poses: 0
                                                         Next:
-                                                          Subs: entry
+                                                          Subs: entry attach
                                                             Poses: 14
                                                             Group:
-                                                              Interface L:
+                                                              Interface L (connect):
                                                                 Poses: 1
                                                               Core: C C
-                                                              Subs: entry
+                                                              Subs: entry attach
                                                                 Poses: 2
                                                                 Sub Core:
                                                                   Core: =O
-                                                              Interface R:
+                                                              Interface R (connect):
                                                                 Poses: 0
-  Interface R:
+  Interface R (connect):
     Poses: 0
 IR:
 C(1,2,16,17,2,0,0)

@@ -24,6 +24,10 @@ static void printPoses(const Poses& poses, int indent) {
 	std::cout << "\n";
 }
 
+static const char* interfaceKindName(InterfaceKind kind) {
+	return kind == InterfaceKind::Fuse ? "fuse" : "connect";
+}
+
 static void printCore(const Core& core, int indent) {
 	printIndent(indent);
 	std::cout << "Core:";
@@ -65,12 +69,12 @@ static void printSubs(const Subs& subs, int indent) {
 		std::cout << "Group:\n";
 		const Cpo& cpo = *subs.group;
 		printIndent(indent + 4);
-		std::cout << "Interface L:\n";
+		std::cout << "Interface L (" << interfaceKindName(cpo.left.kind) << "):\n";
 		printPoses(cpo.left.poses, indent + 6);
 		printCore(cpo.core, indent + 4);
 		printSubs(cpo.subs, indent + 4);
 		printIndent(indent + 4);
-		std::cout << "Interface R:\n";
+		std::cout << "Interface R (" << interfaceKindName(cpo.right.kind) << "):\n";
 		printPoses(cpo.right.poses, indent + 6);
 	} else {
 		printSub(subs.sub, indent + 2);
@@ -89,12 +93,12 @@ static void printCpd(const Cpd& cpd) {
 		std::cout << "CPO #" << (i + 1) << ":\n";
 		const Cpo& cpo = cpd.items[i];
 		printIndent(2);
-		std::cout << "Interface L:\n";
+		std::cout << "Interface L (" << interfaceKindName(cpo.left.kind) << "):\n";
 		printPoses(cpo.left.poses, 4);
 		printCore(cpo.core, 2);
 		printSubs(cpo.subs, 2);
 		printIndent(2);
-		std::cout << "Interface R:\n";
+		std::cout << "Interface R (" << interfaceKindName(cpo.right.kind) << "):\n";
 		printPoses(cpo.right.poses, 4);
 	}
 }

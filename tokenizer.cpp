@@ -21,6 +21,8 @@ std::vector<Token> Tokenizer::tokenize() {
 		if (c == ')') { out.push_back(make(TokenType::RParen, ")")); advance(); continue; }
 		if (c == '[') { out.push_back(make(TokenType::LStr, "[")); advance(); continue; }
 		if (c == ']') { out.push_back(make(TokenType::RStr, "]")); advance(); continue; }
+		if (c == '{') { out.push_back(make(TokenType::LBrace, "{")); advance(); continue; }
+		if (c == '}') { out.push_back(make(TokenType::RBrace, "}")); advance(); continue; }
 		if (c == '-') { out.push_back(make(TokenType::Haf, "-")); advance(); continue; }
 		if (c == '^') { out.push_back(make(TokenType::Caret, "^")); advance(); continue; }
 
@@ -35,6 +37,16 @@ std::vector<Token> Tokenizer::tokenize() {
 			advance();
 			while (!isAtEnd() && std::isdigit(static_cast<unsigned char>(peek()))) {
 				advance();
+			}
+			if (!isAtEnd() && std::isupper(static_cast<unsigned char>(peek()))) {
+				char suffix = peek();
+				if (suffix != 'R' && suffix != 'L') {
+					throw std::runtime_error(
+						"Unsupported numbered atom patch syntax '" +
+						input_.substr(start, pos_ - start + 1) +
+						"'; use position-^X replacement syntax instead"
+					);
+				}
 			}
 			out.push_back(Token{TokenType::Digit, input_.substr(start, pos_ - start), start});
 			continue;
@@ -124,6 +136,8 @@ const char* tokenTypeName(TokenType type) {
 		case TokenType::RParen: return "RParen";
 		case TokenType::LStr: return "LStr";
 		case TokenType::RStr: return "RStr";
+		case TokenType::LBrace: return "LBrace";
+		case TokenType::RBrace: return "RBrace";
 		case TokenType::Keyword: return "Keyword";
 		case TokenType::Identifier: return "Identifier";
 		case TokenType::Digit: return "Digit";

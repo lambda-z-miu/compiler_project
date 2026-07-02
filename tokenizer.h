@@ -11,6 +11,8 @@ enum class TokenType {
 	RParen,     // )
 	LStr,       // [
 	RStr,       // ]
+	LBrace,     // {
+	RBrace,     // }
 	Keyword,    // keywords list
 	Identifier, // [A-Z][A-Z]*
 	Digit,      // [0-9][0-9]*

@@ -42,13 +42,13 @@ Semi	;	45
 End		46
 AST:
 CPO #1:
-  Interface L:
+  Interface L (connect):
     Poses: 0
   Core: NH2 C C
   Subs: entry attach
     Poses: 4
     Group:
-      Interface L:
+      Interface L (connect):
         Poses: 1
       Core: C
       Subs: entry attach
@@ -60,7 +60,7 @@ CPO #1:
             Poses: 1
             Sub Core:
               Core: Me
-      Interface R:
+      Interface R (connect):
         Poses: 0
     Next:
       Subs: entry attach
@@ -72,7 +72,7 @@ CPO #1:
             Poses: 5
             Sub Core:
               Core: OH
-  Interface R:
+  Interface R (connect):
     Poses: 0
 IR:
 N(1,2,3,4,0,0,0)

@@ -409,7 +409,7 @@ Fragment replaceMany(Fragment frag, const std::vector<int>& poses, const Fragmen
 Fragment fuseFragments(Fragment left, Fragment right) {
 	Fragment shifted = shiftFragment(std::move(right), maxId(left));
 	if (left.interfaceR.size() != 2 || shifted.interfaceL.size() != 2) {
-		throw std::runtime_error("Fuse requires two left and two right interface nodes");
+		throw std::runtime_error("Fuse interfaces require exactly two left and two right nodes");
 	}
 
 	std::map<int, int> aliases;
@@ -451,6 +451,7 @@ Fragment fuseFragments(Fragment left, Fragment right) {
 	}
 
 	left.interfaceR = rewriteVector(shifted.interfaceR, aliases);
+	left.interfaceRKind = shifted.interfaceRKind;
 	left.exit = firstNonZero(left.interfaceR);
 	mergeDefaultNext(left.defaultNext, rewriteDefaultNext(shifted.defaultNext, aliases));
 	return left;
@@ -470,23 +471,32 @@ Fragment connectFragments(Fragment left, Fragment right) {
 		throw std::runtime_error("Right fragment has no left interface");
 	}
 
-	std::vector<int> leftPorts = nonZero(left.interfaceR);
-	std::vector<int> rightPorts = nonZero(right.interfaceL);
-	if (leftPorts.size() == 1 && rightPorts.size() == 1) {
-		Fragment shifted = shiftFragment(std::move(right), maxId(left));
-		int shiftedRightPort = firstNonZero(shifted.interfaceL);
-		appendIr(left.ir, shifted.ir);
-		link(left, leftPorts.front(), shiftedRightPort, shifted.entryBond);
-		left.interfaceR = shifted.interfaceR;
-		left.exit = firstNonZero(left.interfaceR);
-		mergeDefaultNext(left.defaultNext, shifted.defaultNext);
-		return left;
+	if (left.interfaceRKind != right.interfaceLKind) {
+		throw std::runtime_error("Adjacent CPO interfaces must use the same bracket kind");
 	}
-	if (leftPorts.size() == 2 && rightPorts.size() == 2) {
+
+	if (left.interfaceRKind == InterfaceKind::Fuse) {
 		return fuseFragments(std::move(left), std::move(right));
 	}
 
-	throw std::runtime_error("Interface size mismatch while connecting CPO fragments");
+	Fragment shifted = shiftFragment(std::move(right), maxId(left));
+	if (left.interfaceR.size() != shifted.interfaceL.size()) {
+		throw std::runtime_error("Connect interfaces must have the same number of nodes");
+	}
+	appendIr(left.ir, shifted.ir);
+	for (size_t i = 0; i < left.interfaceR.size(); ++i) {
+		int leftPort = left.interfaceR[i];
+		int rightPort = shifted.interfaceL[i];
+		if (leftPort == 0 || rightPort == 0) {
+			throw std::runtime_error("Connect interface cannot contain zero");
+		}
+		link(left, leftPort, rightPort, shifted.entryBond);
+	}
+	left.interfaceR = shifted.interfaceR;
+	left.interfaceRKind = shifted.interfaceRKind;
+	left.exit = firstNonZero(left.interfaceR);
+	mergeDefaultNext(left.defaultNext, shifted.defaultNext);
+	return left;
 }
 
 Fragment translateCore(const Core& core) {
@@ -532,6 +542,8 @@ Fragment translateCpo(const Cpo& cpo) {
 	Fragment frag = translateCore(cpo.core);
 	frag.interfaceL = cpo.left.poses.values;
 	frag.interfaceR = cpo.right.poses.values;
+	frag.interfaceLKind = cpo.left.kind;
+	frag.interfaceRKind = cpo.right.kind;
 	validatePorts(frag, frag.interfaceL, "left");
 	validatePorts(frag, frag.interfaceR, "right");
 

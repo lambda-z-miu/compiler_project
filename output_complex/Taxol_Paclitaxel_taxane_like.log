@@ -20,17 +20,17 @@ Digit	4	21
 Haf	-	22
 Keyword	OPh	23
 Sep	,	26
-LParen	(	27
+LBrace	{	27
 Digit	4	28
 Sep	,	29
 Digit	5	30
-RParen	)	31
+RBrace	}	31
 Semi	;	32
-LParen	(	33
+LBrace	{	33
 Digit	1	34
 Sep	,	35
 Digit	2	36
-RParen	)	37
+RBrace	}	37
 Keyword	8R	38
 Sep	,	40
 Digit	1	41
@@ -70,17 +70,17 @@ Digit	0	81
 RParen	)	82
 RStr	]	83
 Sep	,	84
-LParen	(	85
+LBrace	{	85
 Digit	6	86
 Sep	,	87
 Digit	7	88
-RParen	)	89
+RBrace	}	89
 Semi	;	90
-LParen	(	91
+LBrace	{	91
 Digit	1	92
 Sep	,	93
 Digit	2	94
-RParen	)	95
+RBrace	}	95
 Keyword	6R	96
 Sep	,	98
 Digit	2	99
@@ -133,120 +133,120 @@ Semi	;	154
 End		155
 AST:
 CPO #1:
-  Interface L:
+  Interface L (connect):
     Poses: 0
   Core: 6R
-  Subs: entry
+  Subs: entry attach
     Poses: 1
     Sub Core:
       Core: OH
     Next:
-      Subs: entry
+      Subs: entry attach
         Poses: 2
         Sub Core:
           Core: Me
         Next:
-          Subs: entry
+          Subs: entry attach
             Poses: 3
             Sub Core:
               Core: Me
             Next:
-              Subs: entry
+              Subs: entry attach
                 Poses: 4
                 Sub Core:
                   Core: OPh
-  Interface R:
+  Interface R (fuse):
     Poses: 4, 5
 CPO #2:
-  Interface L:
+  Interface L (fuse):
     Poses: 1, 2
   Core: 8R
-  Subs: entry
+  Subs: entry attach
     Poses: 1
     Sub Core:
       Core: =
     Next:
-      Subs: entry
+      Subs: entry attach
         Poses: 3
         Sub Core:
           Core: =O
         Next:
-          Subs: entry
+          Subs: entry attach
             Poses: 4
             Sub Core:
               Core: OH
             Next:
-              Subs: entry
+              Subs: entry attach
                 Poses: 5
                 Sub Core:
                   Core: Ac
                 Next:
-                  Subs: entry
+                  Subs: entry attach
                     Poses: 6
                     Sub Core:
                       Core: Me
                     Next:
-                      Subs: entry
+                      Subs: entry attach
                         Poses: 7
                         Group:
-                          Interface L:
+                          Interface L (connect):
                             Poses: 2
                           Core: Ox5
-                          Subs: entry
+                          Subs: entry attach
                             Poses: 3
                             Sub Core:
                               Core: Me
-                          Interface R:
+                          Interface R (connect):
                             Poses: 0
-  Interface R:
+  Interface R (fuse):
     Poses: 6, 7
 CPO #3:
-  Interface L:
+  Interface L (fuse):
     Poses: 1, 2
   Core: 6R
-  Subs: entry
+  Subs: entry attach
     Poses: 2
     Sub Core:
       Core: OH
     Next:
-      Subs: entry
+      Subs: entry attach
         Poses: 3
         Sub Core:
           Core: Me
         Next:
-          Subs: entry
+          Subs: entry attach
             Poses: 4
             Group:
-              Interface L:
+              Interface L (connect):
                 Poses: 1
               Core: 4L
-              Subs: entry
+              Subs: entry attach
                 Poses: 1
                 Sub Core:
                   Core: OH
                 Next:
-                  Subs: entry
+                  Subs: entry attach
                     Poses: 2
                     Sub Core:
                       Core: Ph
                     Next:
-                      Subs: entry
+                      Subs: entry attach
                         Poses: 3
                         Sub Core:
                           Core: Ac
                         Next:
-                          Subs: entry
+                          Subs: entry attach
                             Poses: 4
                             Sub Core:
                               Core: Ph
-              Interface R:
+              Interface R (connect):
                 Poses: 0
             Next:
-              Subs: entry
+              Subs: entry attach
                 Poses: 5
                 Sub Core:
                   Core: OPh
-  Interface R:
+  Interface R (connect):
     Poses: 0, 0
 IR:
 C(1,2,6,7,0,0,0)

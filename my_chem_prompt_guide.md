@@ -14,7 +14,8 @@ The expression is a sequence of CPO fragments. Every CPO ends with `;`.
 
 ```txt
 CPD  := CPO+
-CPO  := "(" LEFT_INTERFACE ")" CORE "," SUBS "(" RIGHT_INTERFACE ")" ";"
+CPO  := INTERFACE CORE "," SUBS INTERFACE ";"
+INTERFACE := "(" POSES ")" | "{" POSES "}"
 ```
 
 Do not output SMILES. Do not output IR. Do not output SVG.
@@ -24,7 +25,8 @@ Do not output SMILES. Do not output IR. Do not output SVG.
 A CPO has four parts:
 
 ```txt
-(left-interface)CORE,substitutions(right-interface);
+INTERFACE CORE,substitutions INTERFACE;
+Use round interfaces for direct bonds and brace interfaces for fused/shared atoms.
 ```
 
 Examples:
@@ -72,6 +74,8 @@ Bond modifiers:
 
 `O` is available as a generic oxygen atom keyword. For an oxygen heteroatom inside an existing carbon ring, prefer replacement syntax such as `1-^O` rather than external attachment `1-O`.
 
+Do not write numbered atom patch syntax such as `5O`, `4N`, or `3S`. These forms are invalid; write `5-^O`, `4-^N`, or `3-^S`.
+
 ## Local Numbering
 
 All atom numbers are local to the current CPO core, not global molecule numbers.
@@ -94,6 +98,25 @@ For `Ox5`, atom 1 is oxygen, then 2-3-4-5 around the ring.
 
 Substitution positions always refer to the original current core numbering. Inserted substituent atoms do not change later substitution positions in the same CPO.
 
+## Connecting CPOs
+
+Adjacent CPOs are connected by the right interface of the left CPO and the left interface of the next CPO.
+
+Round interfaces connect corresponding atoms directly:
+
+```txt
+(0)2L,(1,2);(1,2)2L,(0);
+```
+
+This adds bonds 1-1 and 2-2 across the two CPO fragments after the second fragment is shifted.
+
+Brace interfaces fuse by sharing atoms:
+
+```txt
+(0)6R,{4,5};{1,2}6R,(0);
+```
+
+This identifies the two atoms in the second CPO's left interface with the two atoms in the previous CPO's right interface. Use this for fused rings. Adjacent interfaces must use the same bracket kind; do not use `(4,5);(1,2)` for fused rings.
 ## Substitutions
 
 Attach a substituent to one or more positions:
@@ -161,13 +184,14 @@ Use `(0)` or `(0,0)` to mean no external connection at an end.
 
 ### Simple Connection
 
-If the left CPO has one right-interface atom and the next CPO has one left-interface atom, they are connected by a normal bond:
+If the left CPO and the next CPO use round interfaces, corresponding atoms are connected by normal bonds:
 
 ```txt
 (0)6R,(3);(1)2L,(0);
+(0)2L,(1,2);(1,2)2L,(0);
 ```
 
-This connects atom 3 of the first CPO to atom 1 of the second CPO.
+The first example connects atom 3 of the first CPO to atom 1 of the second CPO. The second example creates two cross-CPO bonds, 1-to-1 and 2-to-2.
 
 If the right CPO core begins with `=`, the cross-CPO connection is a double bond:
 
@@ -177,13 +201,15 @@ If the right CPO core begins with `=`, the cross-CPO connection is a double bond
 
 ### Ring Fusion
 
-If both sides provide two nonzero interface atoms, the two CPOs are fused. The paired interface atoms become the same atoms:
+If both adjacent interfaces use braces, the two CPOs are fused. The paired interface atoms become the same atoms:
 
 ```txt
-(0)Ph,(4,5);(1,2)7R,(0,0);
+(0)Ph,{4,5};{1,2}7R,(0,0);
 ```
 
 This fuses `Ph` atoms 4 and 5 with `7R` atoms 1 and 2.
+
+Do not use `(4,5);(1,2)` for fused rings. With round interfaces, that means two direct cross-CPO bonds.
 
 Two-interface fusion is not a normal bond. It means shared atoms.
 
@@ -193,11 +219,13 @@ Two-interface fusion is not a normal bond. It means shared atoms.
 
 `p-=` uses the current CPO local numbering and upgrades the internal default bond `p -> defaultNext[p]`.
 
+Rendering completes under-valent nitrogen atoms with explicit hydrogens. If the bond-order sum of an `N` atom is below 3, the SVG renderer adds enough `H` atoms to reach valence 3. This happens only while rendering and does not change the printed IR.
+
 Do not continue a core after terminal groups such as `Me`, `OH`, `SH`, `OMe`, `OPh`, `Ac`, `=O`, and halogens. Use them as substituents or as the end of a core.
 
 Every CPO must contain the comma after `CORE`, even if there are no substitutions.
 
-Adjacent CPO interfaces must match: one nonzero port connects to one nonzero port; two nonzero ports fuse with two nonzero ports.
+Adjacent CPO interfaces must use the same bracket kind: round interfaces connect corresponding atoms directly, and brace interfaces fuse by sharing atoms.
 
 ## Amino Acid Pattern
 
@@ -252,7 +280,7 @@ Interpretation:
 Current my-Chem expression:
 
 ```txt
-(0)6R,1-OH,4-=C,(3);(1)=2L,(2);(1)=6R,(4,5);(1,2)5R,1-Me,5-[(1)8L,1-Me,5-Me,(0)],(0,0);
+(0)6R,1-OH,4-=C,(3);(1)=2L,(2);(1)=6R,{4,5};{1,2}5R,1-Me,5-[(1)8L,1-Me,5-Me,(0)],(0,0);
 ```
 
 Interpretation:
@@ -267,13 +295,12 @@ Use this instruction:
 You must output only a my-Chem DSL expression wrapped in <my-Chem>...</my-Chem>. Do not output SMILES, IR, SVG, explanation, or markdown.
 
 Use the grammar:
-CPO = "(" left ")" CORE "," SUBS "(" right ")" ";"
+CPO = INTERFACE CORE "," SUBS INTERFACE ";"; INTERFACE = "(" poses ")" or "{" poses "}"
 CPD = one or more CPOs.
 
-Use local atom numbering inside each CPO. Use one-interface connections for normal bonds and two-interface connections for fused rings. Use p-= to upgrade the current CPO internal default bond p->defaultNext[p]. Use p-=O for carbonyl oxygen. Use p-^X to replace atom p with X instead of attaching X. Use [CPO] for structured substituents with exactly one nonzero left interface.
+Use local atom numbering inside each CPO. Use round interfaces `(1,2);(1,2)` to connect corresponding atoms directly. Use brace interfaces `{1,2};{1,2}` for fused/shared atoms. Use p-= to upgrade the current CPO internal default bond p->defaultNext[p]. Use p-=O for carbonyl oxygen. Use p-^X to replace atom p with X instead of attaching X. Use [CPO] for structured substituents with exactly one nonzero left interface.
 
 Available keywords: C, P, O, N, S, F, Cl, Br, I, Me, Ac, NH2, OH, SH, OMe, OPh, =O, Ph, Im, Ind, Pyr, Ox5, nR, nL, =, #.
 
-Do not invent unsupported keywords. Do not use 1-N to replace a ring atom; it attaches an external N. Use 1-^N or 1-^O for ring-atom replacement/heteroatom substitution.
+Do not invent unsupported keywords. Do not use 1-N to replace a ring atom; it attaches an external N. Use 1-^N or 1-^O for ring-atom replacement/heteroatom substitution. Do not use numbered atom patch syntax such as 5O; write 5-^O instead.
 ```
-

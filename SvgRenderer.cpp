@@ -41,6 +41,11 @@ struct RenderEdge {
 	int order = 1;
 };
 
+struct RenderGraph {
+	std::vector<RenderNode> nodes;
+	std::vector<RenderEdge> edges;
+};
+
 std::string number(double value) {
 	std::ostringstream out;
 	out << std::fixed << std::setprecision(2) << value;
@@ -125,6 +130,50 @@ std::vector<RenderEdge> makeEdges(const Fragment& frag) {
 	return edges;
 }
 
+int maxRenderNodeId(const std::vector<RenderNode>& nodes) {
+	int maxId = 0;
+	for (const auto& node : nodes) {
+		maxId = std::max(maxId, node.id);
+	}
+	return maxId;
+}
+
+std::map<int, int> makeBondOrderByAtom(const std::vector<RenderNode>& nodes, const std::vector<RenderEdge>& edges) {
+	std::map<int, int> orderByAtom;
+	for (const auto& node : nodes) {
+		orderByAtom.emplace(node.id, 0);
+	}
+	for (const auto& edge : edges) {
+		orderByAtom[edge.a] += edge.order;
+		orderByAtom[edge.b] += edge.order;
+	}
+	return orderByAtom;
+}
+
+void addMissingNitrogenHydrogens(RenderGraph& graph) {
+	std::map<int, int> orderByAtom = makeBondOrderByAtom(graph.nodes, graph.edges);
+	int nextId = maxRenderNodeId(graph.nodes) + 1;
+	const size_t originalSize = graph.nodes.size();
+	for (size_t i = 0; i < originalSize; ++i) {
+		const int nitrogenId = graph.nodes[i].id;
+		if (graph.nodes[i].atom != "N") {
+			continue;
+		}
+		int missing = std::max(0, 3 - orderByAtom[nitrogenId]);
+		for (int h = 0; h < missing; ++h) {
+			int hId = nextId++;
+			graph.nodes.push_back(RenderNode{hId, "H", {}});
+			graph.edges.push_back(RenderEdge{nitrogenId, hId, 1});
+		}
+	}
+}
+
+RenderGraph makeRenderGraph(const Fragment& frag) {
+	RenderGraph graph{makeNodes(frag), makeEdges(frag)};
+	addMissingNitrogenHydrogens(graph);
+	return graph;
+}
+
 #ifdef COMPILER_PROJECT_HAVE_RDKIT
 int atomicNumberFor(const std::string& atom) {
 	if (atom == "H") {
@@ -175,19 +224,23 @@ RDKit::Bond::BondType bondTypeForOrder(int order) {
 
 std::string renderSvgWithRdkit(const Fragment& frag) {
 	RDKit::RWMol mol;
-	std::vector<RenderNode> nodes = makeNodes(frag);
-	std::vector<RenderEdge> edges = makeEdges(frag);
+	RenderGraph graph = makeRenderGraph(frag);
 	std::map<int, unsigned int> atomIndexById;
 
-	for (const auto& node : nodes) {
+	for (const auto& node : graph.nodes) {
 		auto* atom = new RDKit::Atom(atomicNumberFor(node.atom));
 		atom->setNoImplicit(true);
 		unsigned int atomIndex = mol.addAtom(atom, false, true);
 		atomIndexById[node.id] = atomIndex;
 	}
 
-	for (const auto& edge : edges) {
-		mol.addBond(atomIndexById.at(edge.a), atomIndexById.at(edge.b), bondTypeForOrder(edge.order));
+	for (const auto& edge : graph.edges) {
+		auto aIt = atomIndexById.find(edge.a);
+		auto bIt = atomIndexById.find(edge.b);
+		if (aIt == atomIndexById.end() || bIt == atomIndexById.end()) {
+			throw std::runtime_error("Renderer edge references missing atom id " + std::to_string(edge.a) + "-" + std::to_string(edge.b));
+		}
+		mol.addBond(aIt->second, bIt->second, bondTypeForOrder(edge.order));
 	}
 
 	mol.updatePropertyCache(false);
@@ -364,8 +417,9 @@ std::string renderAtomLabel(const RenderNode& node, Vec2 p) {
 }
 
 std::string renderSvgFallback(const Fragment& frag) {
-	std::vector<RenderNode> nodes = makeNodes(frag);
-	std::vector<RenderEdge> edges = makeEdges(frag);
+	RenderGraph graph = makeRenderGraph(frag);
+	std::vector<RenderNode> nodes = std::move(graph.nodes);
+	std::vector<RenderEdge> edges = std::move(graph.edges);
 	std::map<int, int> indexById = makeIndexById(nodes);
 	std::vector<int> degrees = makeDegrees(nodes, edges, indexById);
 

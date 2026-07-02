@@ -33,17 +33,17 @@ RParen	)	33
 Keyword	=	34
 Keyword	6R	35
 Sep	,	37
-LParen	(	38
+LBrace	{	38
 Digit	4	39
 Sep	,	40
 Digit	5	41
-RParen	)	42
+RBrace	}	42
 Semi	;	43
-LParen	(	44
+LBrace	{	44
 Digit	1	45
 Sep	,	46
 Digit	2	47
-RParen	)	48
+RBrace	}	48
 Keyword	5R	49
 Sep	,	51
 Digit	1	52
@@ -80,61 +80,61 @@ Semi	;	86
 End		87
 AST:
 CPO #1:
-  Interface L:
+  Interface L (connect):
     Poses: 0
   Core: 6R
-  Subs: entry
+  Subs: entry attach
     Poses: 1
     Sub Core:
       Core: OH
     Next:
-      Subs: entry
+      Subs: entry attach
         Poses: 4
         Sub Core:
           Core: = C
-  Interface R:
+  Interface R (connect):
     Poses: 3
 CPO #2:
-  Interface L:
+  Interface L (connect):
     Poses: 1
   Core: = 2L
   Subs: empty
-  Interface R:
+  Interface R (connect):
     Poses: 2
 CPO #3:
-  Interface L:
+  Interface L (connect):
     Poses: 1
   Core: = 6R
   Subs: empty
-  Interface R:
+  Interface R (fuse):
     Poses: 4, 5
 CPO #4:
-  Interface L:
+  Interface L (fuse):
     Poses: 1, 2
   Core: 5R
-  Subs: entry
+  Subs: entry attach
     Poses: 1
     Sub Core:
       Core: Me
     Next:
-      Subs: entry
+      Subs: entry attach
         Poses: 5
         Group:
-          Interface L:
+          Interface L (connect):
             Poses: 1
           Core: 8L
-          Subs: entry
+          Subs: entry attach
             Poses: 1
             Sub Core:
               Core: Me
             Next:
-              Subs: entry
+              Subs: entry attach
                 Poses: 5
                 Sub Core:
                   Core: Me
-          Interface R:
+          Interface R (connect):
             Poses: 0
-  Interface R:
+  Interface R (connect):
     Poses: 0, 0
 IR:
 C(1,2,6,7,0,0,0)

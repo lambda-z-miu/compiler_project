@@ -32,13 +32,13 @@ Semi	;	33
 End		34
 AST:
 CPO #1:
-  Interface L:
+  Interface L (connect):
     Poses: 0
   Core: Pyr
   Subs: entry attach
     Poses: 2
     Group:
-      Interface L:
+      Interface L (connect):
         Poses: 1
       Core: C
       Subs: entry attach
@@ -50,9 +50,9 @@ CPO #1:
             Poses: 1
             Sub Core:
               Core: OH
-      Interface R:
+      Interface R (connect):
         Poses: 0
-  Interface R:
+  Interface R (connect):
     Poses: 0
 IR:
 N(1,2,5,6,0,0,0)

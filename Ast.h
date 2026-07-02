@@ -8,6 +8,11 @@ struct Poses {
 	std::vector<int> values;
 };
 
+enum class InterfaceKind {
+	Connect,
+	Fuse
+};
+
 struct Core {
 	std::vector<std::string> keywords;
 };
@@ -24,6 +29,7 @@ struct Sub {
 };
 
 struct Interface {
+	InterfaceKind kind = InterfaceKind::Connect;
 	Poses poses;
 };
 

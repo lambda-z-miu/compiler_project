@@ -8,17 +8,21 @@ TOKEN TYPE：
 6) RPAREN = )
 7) LSTR = [
 8) RSTR = ]
-9) digit = [0-9][0-9]*
-10) HAF = -
-11) CARET = ^
+9) LBRACE = {
+10) RBRACE = }
+11) digit = [0-9][0-9]*
+12) HAF = -
+13) CARET = ^
 
 CFG规则：
 1) CPD := CPO semi CPD
         | empty
 
 2) CPO := INTERFACEL CORE SUBS INTERFACER
-3) INTERFACEL := lparen POSES rparen
-   INTERFACER := lparen POSES rparen
+3) INTERFACEL := INTERFACE
+   INTERFACER := INTERFACE
+   INTERFACE := lparen POSES rparen
+             | lbrace POSES rbrace
 4) POSES := digit 
         | digit sep POSES
 5) SUBS := POSES haf SUBS'
@@ -35,6 +39,8 @@ CFG规则：
         | KEYWORDS CORE
 
 caret before SUBS_ITEM means replacement: p-^X replaces atom p with X instead of attaching X to p. A leading ^X without explicit POSES uses pose 1.
+Numbered atom patch syntax such as 5O, 4N, or 3S is invalid and is not part of CORE or SUBS; write 5-^O, 4-^N, or 3-^S instead.
+Round interfaces connect corresponding atoms directly, for example (1,2);(1,2). Brace interfaces fuse by sharing atoms, for example {1,2};{1,2}. Adjacent interfaces must use the same bracket kind.
 先判断这个文法是LL形还是LR形，告诉我解析策略，再开始写
 
 CFG(消除左递归、左公因子)
@@ -42,8 +48,10 @@ CFG(消除左递归、左公因子)
         | empty
 
 2) CPO := INTERFACEL CORE sep SUBS INTERFACER
-3) INTERFACEL := lparen POSES rparen
-   INTERFACER := lparen POSES rparen
+3) INTERFACEL := INTERFACE
+   INTERFACER := INTERFACE
+   INTERFACE := lparen POSES rparen
+             | lbrace POSES rbrace
 4) POSES := digit POSES'
 5) POSES':=  empty
         | sep POSES'

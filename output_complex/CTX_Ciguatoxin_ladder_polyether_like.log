@@ -33,204 +33,204 @@ Digit	3	34
 Haf	-	35
 Keyword	OH	36
 Sep	,	38
-LParen	(	39
+LBrace	{	39
 Digit	4	40
 Sep	,	41
 Digit	5	42
-RParen	)	43
+RBrace	}	43
 Semi	;	44
-LParen	(	45
+LBrace	{	45
 Digit	2	46
 Sep	,	47
 Digit	3	48
-RParen	)	49
+RBrace	}	49
 Keyword	Ox5	50
 Sep	,	53
 Digit	4	54
 Haf	-	55
 Keyword	OH	56
 Sep	,	58
-LParen	(	59
+LBrace	{	59
 Digit	4	60
 Sep	,	61
 Digit	5	62
-RParen	)	63
+RBrace	}	63
 Semi	;	64
-LParen	(	65
+LBrace	{	65
 Digit	2	66
 Sep	,	67
 Digit	3	68
-RParen	)	69
+RBrace	}	69
 Keyword	Ox5	70
 Sep	,	73
 Digit	5	74
 Haf	-	75
 Keyword	Me	76
 Sep	,	78
-LParen	(	79
+LBrace	{	79
 Digit	4	80
 Sep	,	81
 Digit	5	82
-RParen	)	83
+RBrace	}	83
 Semi	;	84
-LParen	(	85
+LBrace	{	85
 Digit	2	86
 Sep	,	87
 Digit	3	88
-RParen	)	89
+RBrace	}	89
 Keyword	Ox5	90
 Sep	,	93
 Digit	4	94
 Haf	-	95
 Keyword	OH	96
 Sep	,	98
-LParen	(	99
+LBrace	{	99
 Digit	4	100
 Sep	,	101
 Digit	5	102
-RParen	)	103
+RBrace	}	103
 Semi	;	104
-LParen	(	105
+LBrace	{	105
 Digit	2	106
 Sep	,	107
 Digit	3	108
-RParen	)	109
+RBrace	}	109
 Keyword	Ox5	110
 Sep	,	113
 Digit	5	114
 Haf	-	115
 Keyword	OH	116
 Sep	,	118
-LParen	(	119
+LBrace	{	119
 Digit	4	120
 Sep	,	121
 Digit	5	122
-RParen	)	123
+RBrace	}	123
 Semi	;	124
-LParen	(	125
+LBrace	{	125
 Digit	2	126
 Sep	,	127
 Digit	3	128
-RParen	)	129
+RBrace	}	129
 Keyword	Ox5	130
 Sep	,	133
 Digit	4	134
 Haf	-	135
 Keyword	Me	136
 Sep	,	138
-LParen	(	139
+LBrace	{	139
 Digit	4	140
 Sep	,	141
 Digit	5	142
-RParen	)	143
+RBrace	}	143
 Semi	;	144
-LParen	(	145
+LBrace	{	145
 Digit	2	146
 Sep	,	147
 Digit	3	148
-RParen	)	149
+RBrace	}	149
 Keyword	Ox5	150
 Sep	,	153
 Digit	5	154
 Haf	-	155
 Keyword	OH	156
 Sep	,	158
-LParen	(	159
+LBrace	{	159
 Digit	4	160
 Sep	,	161
 Digit	5	162
-RParen	)	163
+RBrace	}	163
 Semi	;	164
-LParen	(	165
+LBrace	{	165
 Digit	2	166
 Sep	,	167
 Digit	3	168
-RParen	)	169
+RBrace	}	169
 Keyword	Ox5	170
 Sep	,	173
 Digit	4	174
 Haf	-	175
 Keyword	OH	176
 Sep	,	178
-LParen	(	179
+LBrace	{	179
 Digit	4	180
 Sep	,	181
 Digit	5	182
-RParen	)	183
+RBrace	}	183
 Semi	;	184
-LParen	(	185
+LBrace	{	185
 Digit	2	186
 Sep	,	187
 Digit	3	188
-RParen	)	189
+RBrace	}	189
 Keyword	Ox5	190
 Sep	,	193
 Digit	5	194
 Haf	-	195
 Keyword	Me	196
 Sep	,	198
-LParen	(	199
+LBrace	{	199
 Digit	4	200
 Sep	,	201
 Digit	5	202
-RParen	)	203
+RBrace	}	203
 Semi	;	204
-LParen	(	205
+LBrace	{	205
 Digit	2	206
 Sep	,	207
 Digit	3	208
-RParen	)	209
+RBrace	}	209
 Keyword	Ox5	210
 Sep	,	213
 Digit	4	214
 Haf	-	215
 Keyword	OH	216
 Sep	,	218
-LParen	(	219
+LBrace	{	219
 Digit	4	220
 Sep	,	221
 Digit	5	222
-RParen	)	223
+RBrace	}	223
 Semi	;	224
-LParen	(	225
+LBrace	{	225
 Digit	2	226
 Sep	,	227
 Digit	3	228
-RParen	)	229
+RBrace	}	229
 Keyword	Ox5	230
 Sep	,	233
 Digit	5	234
 Haf	-	235
 Keyword	OH	236
 Sep	,	238
-LParen	(	239
+LBrace	{	239
 Digit	4	240
 Sep	,	241
 Digit	5	242
-RParen	)	243
+RBrace	}	243
 Semi	;	244
-LParen	(	245
+LBrace	{	245
 Digit	2	246
 Sep	,	247
 Digit	3	248
-RParen	)	249
+RBrace	}	249
 Keyword	Ox5	250
 Sep	,	253
 Digit	4	254
 Haf	-	255
 Keyword	Me	256
 Sep	,	258
-LParen	(	259
+LBrace	{	259
 Digit	4	260
 Sep	,	261
 Digit	5	262
-RParen	)	263
+RBrace	}	263
 Semi	;	264
-LParen	(	265
+LBrace	{	265
 Digit	2	266
 Sep	,	267
 Digit	3	268
-RParen	)	269
+RBrace	}	269
 Keyword	Ox5	270
 Sep	,	273
 Digit	4	274
@@ -267,175 +267,175 @@ Semi	;	308
 End		309
 AST:
 CPO #1:
-  Interface L:
+  Interface L (connect):
     Poses: 0
   Core: Ox5
-  Subs: entry
+  Subs: entry attach
     Poses: 2
     Group:
-      Interface L:
+      Interface L (connect):
         Poses: 1
       Core: 4L
-      Subs: entry
+      Subs: entry attach
         Poses: 1
         Sub Core:
           Core: =
         Next:
-          Subs: entry
+          Subs: entry attach
             Poses: 3
             Sub Core:
               Core: =
             Next:
-              Subs: entry
+              Subs: entry attach
                 Poses: 4
                 Sub Core:
                   Core: Me
-      Interface R:
+      Interface R (connect):
         Poses: 0
     Next:
-      Subs: entry
+      Subs: entry attach
         Poses: 3
         Sub Core:
           Core: OH
-  Interface R:
+  Interface R (fuse):
     Poses: 4, 5
 CPO #2:
-  Interface L:
+  Interface L (fuse):
     Poses: 2, 3
   Core: Ox5
-  Subs: entry
+  Subs: entry attach
     Poses: 4
     Sub Core:
       Core: OH
-  Interface R:
+  Interface R (fuse):
     Poses: 4, 5
 CPO #3:
-  Interface L:
+  Interface L (fuse):
     Poses: 2, 3
   Core: Ox5
-  Subs: entry
+  Subs: entry attach
     Poses: 5
     Sub Core:
       Core: Me
-  Interface R:
+  Interface R (fuse):
     Poses: 4, 5
 CPO #4:
-  Interface L:
+  Interface L (fuse):
     Poses: 2, 3
   Core: Ox5
-  Subs: entry
+  Subs: entry attach
     Poses: 4
     Sub Core:
       Core: OH
-  Interface R:
+  Interface R (fuse):
     Poses: 4, 5
 CPO #5:
-  Interface L:
+  Interface L (fuse):
     Poses: 2, 3
   Core: Ox5
-  Subs: entry
+  Subs: entry attach
     Poses: 5
     Sub Core:
       Core: OH
-  Interface R:
+  Interface R (fuse):
     Poses: 4, 5
 CPO #6:
-  Interface L:
+  Interface L (fuse):
     Poses: 2, 3
   Core: Ox5
-  Subs: entry
+  Subs: entry attach
     Poses: 4
     Sub Core:
       Core: Me
-  Interface R:
+  Interface R (fuse):
     Poses: 4, 5
 CPO #7:
-  Interface L:
+  Interface L (fuse):
     Poses: 2, 3
   Core: Ox5
-  Subs: entry
+  Subs: entry attach
     Poses: 5
     Sub Core:
       Core: OH
-  Interface R:
+  Interface R (fuse):
     Poses: 4, 5
 CPO #8:
-  Interface L:
+  Interface L (fuse):
     Poses: 2, 3
   Core: Ox5
-  Subs: entry
+  Subs: entry attach
     Poses: 4
     Sub Core:
       Core: OH
-  Interface R:
+  Interface R (fuse):
     Poses: 4, 5
 CPO #9:
-  Interface L:
+  Interface L (fuse):
     Poses: 2, 3
   Core: Ox5
-  Subs: entry
+  Subs: entry attach
     Poses: 5
     Sub Core:
       Core: Me
-  Interface R:
+  Interface R (fuse):
     Poses: 4, 5
 CPO #10:
-  Interface L:
+  Interface L (fuse):
     Poses: 2, 3
   Core: Ox5
-  Subs: entry
+  Subs: entry attach
     Poses: 4
     Sub Core:
       Core: OH
-  Interface R:
+  Interface R (fuse):
     Poses: 4, 5
 CPO #11:
-  Interface L:
+  Interface L (fuse):
     Poses: 2, 3
   Core: Ox5
-  Subs: entry
+  Subs: entry attach
     Poses: 5
     Sub Core:
       Core: OH
-  Interface R:
+  Interface R (fuse):
     Poses: 4, 5
 CPO #12:
-  Interface L:
+  Interface L (fuse):
     Poses: 2, 3
   Core: Ox5
-  Subs: entry
+  Subs: entry attach
     Poses: 4
     Sub Core:
       Core: Me
-  Interface R:
+  Interface R (fuse):
     Poses: 4, 5
 CPO #13:
-  Interface L:
+  Interface L (fuse):
     Poses: 2, 3
   Core: Ox5
-  Subs: entry
+  Subs: entry attach
     Poses: 4
     Sub Core:
       Core: OH
     Next:
-      Subs: entry
+      Subs: entry attach
         Poses: 5
         Group:
-          Interface L:
+          Interface L (connect):
             Poses: 1
           Core: 5L
-          Subs: entry
+          Subs: entry attach
             Poses: 2
             Sub Core:
               Core: OH
             Next:
-              Subs: entry
+              Subs: entry attach
                 Poses: 4
                 Sub Core:
                   Core: Me
-          Interface R:
+          Interface R (connect):
             Poses: 0
-  Interface R:
+  Interface R (connect):
     Poses: 0, 0
 IR:
 O(1,2,5,0,0,0,0)

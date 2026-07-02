@@ -39,6 +39,8 @@ Fragment {
     entryBond: int          // 外部连接到 entry 时使用的键阶，默认 1
     interfaceL: list<int>   // CPO 左接口
     interfaceR: list<int>   // CPO 右接口
+    interfaceLKind: connect | fuse
+    interfaceRKind: connect | fuse
     defaultNext: map<int,int> // pose -= 这类内部升键的默认目标
 }
 
@@ -650,7 +652,7 @@ KEYWORDS -> digit L
 2. 实现 `translateKeyword` 和 `buildCore`，用简单输入测试 `Ph`、`Me`、`=O`、`7R`。
 3. 实现 `translateSub/translateSubs/translateCpo`，测试单个 CPO。
 4. 实现 `connectFragments` 的 bridge。
-5. 最后实现 `fuse`，测试 `(4,5);(1,2)` 这种双接口稠合。
+5. 最后实现 `fuse`，测试 `{4,5};{1,2}` 这种双接口稠合。
 
 ## Replacement Substitution: ^X
 
@@ -681,3 +683,47 @@ Semantics:
         return F
 
 p-X attaches X externally to atom p. p-^X replaces atom p with X. For example, 1-N adds an external N substituent, while 1-^N changes atom 1 itself into N and preserves the original bonds at atom 1. Oxygen heteroatoms can be written as 1-^O; replacing with a group such as 1-^OH makes the entry O occupy atom 1 and keeps the attached H.
+
+Numbered atom patch syntax such as 5O, 4N, or 3S is not a semantic form. The only replacement operation is p-^X, so atom replacement always passes through SUBS and replace(F, pose, S).
+
+## Explicit Interface Syntax
+
+A CPO interface now carries both ports and connection kind:
+
+    (p1,p2)    connect interface
+    {p1,p2}    fuse interface
+
+When two adjacent CPO fragments are combined, the right interface of the left fragment and the left interface of the right fragment must use the same kind.
+
+Connect semantics for `(a1,a2)(b1,b2)`:
+
+    connect(A, B):
+        require A.interfaceRKind == connect
+        require B.interfaceLKind == connect
+        require len(A.interfaceR) == len(B.interfaceL)
+        require all ports are non-zero
+        B = shift(B, maxId(A.IR))
+        merge A.IR and B.IR
+        for each pair i:
+            link(A.IR, A.interfaceR[i], B.interfaceL[i], B.entryBond)
+        A.interfaceR = B.interfaceR
+        A.interfaceRKind = B.interfaceRKind
+        return A
+
+Fuse semantics for `{a1,a2}{b1,b2}`:
+
+    fuse(A, B):
+        require A.interfaceRKind == fuse
+        require B.interfaceLKind == fuse
+        require len(A.interfaceR) == 2
+        require len(B.interfaceL) == 2
+        require all ports are non-zero and distinct
+        B = shift(B, maxId(A.IR))
+        alias[B.interfaceL[0]] = A.interfaceR[0]
+        alias[B.interfaceL[1]] = A.interfaceR[1]
+        merge B into A after rewriting ids and connections through alias
+        A.interfaceR = rewrite(B.interfaceR, alias)
+        A.interfaceRKind = B.interfaceRKind
+        return A
+
+The old inferred rule is removed: `(1,2);(1,2)` no longer means fused rings. It creates two direct cross-fragment bonds. Use `{1,2};{1,2}` for shared-atom fusion.

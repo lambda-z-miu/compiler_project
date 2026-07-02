@@ -49,47 +49,47 @@ Semi	;	53
 End		54
 AST:
 CPO #1:
-  Interface L:
+  Interface L (connect):
     Poses: 0
   Core: Ox5
-  Subs: entry
+  Subs: entry attach
     Poses: 2
     Sub Core:
       Core: =O
     Next:
-      Subs: entry
+      Subs: entry attach
         Poses: 3
         Sub Core:
           Core: =
         Next:
-          Subs: entry
+          Subs: entry attach
             Poses: 3
             Sub Core:
               Core: OH
             Next:
-              Subs: entry
+              Subs: entry attach
                 Poses: 4
                 Sub Core:
                   Core: OH
                 Next:
-                  Subs: entry
+                  Subs: entry attach
                     Poses: 5
                     Group:
-                      Interface L:
+                      Interface L (connect):
                         Poses: 1
                       Core: C C
-                      Subs: entry
+                      Subs: entry attach
                         Poses: 1
                         Sub Core:
                           Core: OH
                         Next:
-                          Subs: entry
+                          Subs: entry attach
                             Poses: 2
                             Sub Core:
                               Core: OH
-                      Interface R:
+                      Interface R (connect):
                         Poses: 0
-  Interface R:
+  Interface R (connect):
     Poses: 0
 IR:
 O(1,2,5,0,0,0,0)

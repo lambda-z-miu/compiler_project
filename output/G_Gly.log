@@ -21,7 +21,7 @@ Semi	;	22
 End		23
 AST:
 CPO #1:
-  Interface L:
+  Interface L (connect):
     Poses: 0
   Core: NH2 C C
   Subs: entry attach
@@ -33,7 +33,7 @@ CPO #1:
         Poses: 5
         Sub Core:
           Core: OH
-  Interface R:
+  Interface R (connect):
     Poses: 0
 IR:
 N(1,2,3,4,0,0,0)

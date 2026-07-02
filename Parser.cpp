@@ -9,7 +9,7 @@ Parser::Parser(std::vector<Token> tokens) : tokens_(std::move(tokens)) {}
 
 Cpd Parser::parseCpd() {
 	Cpd cpd;
-	while (check(TokenType::LParen)) {
+	while (isStartInterface()) {
 		cpd.items.push_back(parseCpo());
 		expect(TokenType::Semi, "Expected ';' after CPO");
 	}
@@ -47,6 +47,10 @@ bool Parser::isStartSub() const {
 	return check(TokenType::Identifier) || check(TokenType::Keyword);
 }
 
+bool Parser::isStartInterface() const {
+	return check(TokenType::LParen) || check(TokenType::LBrace);
+}
+
 Cpo Parser::parseCpo() {
 	Cpo cpo;
 	cpo.left = parseInterface();
@@ -58,10 +62,21 @@ Cpo Parser::parseCpo() {
 }
 
 Interface Parser::parseInterface() {
-	expect(TokenType::LParen, "Expected '('");
 	Interface iface;
+	TokenType close = TokenType::RParen;
+	if (check(TokenType::LParen)) {
+		iface.kind = InterfaceKind::Connect;
+		advance();
+		close = TokenType::RParen;
+	} else if (check(TokenType::LBrace)) {
+		iface.kind = InterfaceKind::Fuse;
+		advance();
+		close = TokenType::RBrace;
+	} else {
+		throw std::runtime_error("Expected '(' or '{' at position " + std::to_string(peek().pos));
+	}
 	iface.poses = parsePoses();
-	expect(TokenType::RParen, "Expected ')' after poses");
+	expect(close, close == TokenType::RParen ? "Expected ')' after poses" : "Expected '}' after poses");
 	return iface;
 }
 

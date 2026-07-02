@@ -1,0 +1,443 @@
+\documentclass[UTF8,a4paper,11pt]{ctexart}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\geometry{margin=2.4cm}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue,
+  citecolor=blue
+}
+
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekw}{RGB}{0,92,175}
+\definecolor{codecomment}{RGB}{80,120,80}
+
+\lstdefinelanguage{mychem}{
+  morekeywords={Ph,Im,Ind,Pyr,Ox5,Me,Ac,NH2,OH,SH,OMe,OPh,C,N,O,S,P,F,Cl,Br,I},
+  sensitive=true,
+  morecomment=[l]{\#}
+}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{codebg},
+  keywordstyle=\color{codekw},
+  commentstyle=\color{codecomment},
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  frame=single,
+  framerule=0.2pt,
+  rulecolor=\color{black!25},
+  showstringspaces=false
+}
+
+\title{面向大模型化学回答的可编译分子标记语言与渲染系统实验报告}
+\author{TODO: 作者}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+本文报告一个面向化学结构表达与网页渲染的小型编译系统。系统定义了一种文本 DSL，将大模型或人工给出的分子片段表达式编译为显式的分子连接图 IR，并进一步渲染为 SVG 键线式。本文目前重点描述技术模块，包括语言语法、语义设计、AST 到 IR 的翻译、前后端划分以及 C++ 实现。研究动机、实验结果和讨论将在后续版本中补充。
+\end{abstract}
+
+\section{研究动机（待补）}
+
+TODO: 这里由作者补充。建议围绕如下问题展开：
+\begin{itemize}[leftmargin=2em]
+  \item 大模型直接输出化学结构图、SVG 或 SMILES 时分别有什么问题；
+  \item 为什么需要一种介于自然语言和分子图之间的可编译 DSL；
+  \item 该 DSL 相比自由文本、SMILES、直接 SVG 的优势，例如可检查、可局部编辑、可扩展、适合网页内嵌等。
+\end{itemize}
+
+\section{系统概览}
+
+系统将分子结构表达建模为一次小型编译过程：
+\[
+  \text{my-Chem source}
+  \rightarrow \text{Token stream}
+  \rightarrow \text{AST}
+  \rightarrow \text{IR graph}
+  \rightarrow \text{SVG}.
+\]
+
+前端负责识别和解析源语言，后端负责语义翻译与渲染。整体实现由一个 C++ 编译核心库和若干入口程序组成：
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{词法分析器}：将输入字符串切分为括号、分隔符、数字、关键字等 token。
+  \item \textbf{递归下降 Parser}：根据文法构造 AST，保留 CPO、接口、核心片段和取代基结构。
+  \item \textbf{语义翻译器}：把 AST 翻译为无序分子连接图 IR，并完成接口合法性、端基、稠合、原子替换等语义检查。
+  \item \textbf{SVG 渲染后端}：优先将 IR 降低为 RDKit 分子对象并调用 RDKit 2D depiction；当 RDKit 不可用时使用内置 SVG fallback。
+  \item \textbf{浏览器插件与本地服务}：网页中的 \verb|<my-Chem>...</my-Chem>| 内容由插件提取，发送给本地 C++ 服务，返回 SVG 后替换原标签。
+\end{itemize}
+
+\section{源语言设计}
+
+\subsection{CPO 片段}
+
+源语言的基本单位是 CPO（chemical phrase object）。一个完整输入由一个或多个 CPO 串联组成，每个 CPO 以分号结束：
+
+\begin{lstlisting}[language=mychem]
+CPD       := CPO+
+CPO       := INTERFACE CORE "," SUBS INTERFACE ";"
+INTERFACE := "(" POSES ")" | "{" POSES "}"
+POSES     := digit ("," digit)*
+\end{lstlisting}
+
+一个 CPO 包含四个部分：左接口、核心片段、取代基列表、右接口。例如：
+
+\begin{lstlisting}[language=mychem]
+(0)Ph,1-OH,(0);
+(0)NH2CC,4-Me,5-=O,5-OH,(0);
+(0)6R,{4,5};{1,2}6R,(0);
+\end{lstlisting}
+
+接口中的编号均为当前 CPO 内部的局部原子编号。数字 \verb|0| 表示空接口，不参与跨 CPO 连接。
+
+\subsection{核心关键字}
+
+核心片段由关键字序列构成。当前实现支持如下关键字：
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\toprule
+类别 & 关键字 & 含义 \\
+\midrule
+单原子 & \verb|C P O N S F Cl Br I| & 对应元素原子 \\
+常用取代基 & \verb|Me Ac NH2 OH SH OMe OPh =O| & 预定义官能团或片段 \\
+环与杂环 & \verb|Ph Im Ind Pyr Ox5| & 常用环片段 \\
+参数化骨架 & \verb|nR nL| & $n$ 元碳环或 $n$ 原子碳链 \\
+键阶修饰 & \verb|= #| & 双键或三键修饰符 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+其中 \verb|nR| 表示 $n$ 元全碳环，例如 \verb|5R|、\verb|6R|；\verb|nL| 表示 $n$ 原子碳链，例如 \verb|2L|、\verb|4L|。数字后缀只允许 \verb|R| 和 \verb|L|。旧的补丁写法如 \verb|5O|、\verb|4N| 不属于语法，必须写为取代语义 \verb|5-^O|、\verb|4-^N|。
+
+\subsection{CPO 间接口：连边与稠合}
+
+接口括号类型具有明确语义：
+\begin{itemize}[leftmargin=2em]
+  \item 圆括号 \verb|(p1,p2)| 表示直接连边接口。相邻 CPO 的对应接口原子按位置逐对相连。
+  \item 花括号 \verb|{p1,p2}| 表示共用原子接口。相邻 CPO 的对应接口原子被视为同一组原子，用于稠合环。
+\end{itemize}
+
+例如：
+
+\begin{lstlisting}[language=mychem]
+(0)2L,(1,2);(1,2)2L,(0);
+\end{lstlisting}
+
+该表达式将第一个 CPO 的 1、2 号原子分别与第二个 CPO 的 1、2 号原子直接相连，形成两条跨 CPO 键。相反：
+
+\begin{lstlisting}[language=mychem]
+(0)6R,{4,5};{1,2}6R,(0);
+\end{lstlisting}
+
+表示第二个六元环的 1、2 号原子与第一个六元环的 4、5 号原子共用，从而构造稠合环。相邻接口必须使用相同括号类型，否则语义翻译阶段报错。旧规则中“两个非零接口自动稠合”的推断已被删除，因此 \verb|(4,5);(1,2)| 现在表示两条直接跨片段键，而不是稠合。
+
+\subsection{取代基与原子替换}
+
+CPO 的 \verb|SUBS| 部分描述当前核心上的局部修改：
+
+\begin{lstlisting}[language=mychem]
+p-X,          attach: 在 p 号原子外接 X
+p1,p2-X,      attach many: 在多个位置外接 X
+p-=,          升级 p 到 defaultNext[p] 的内部键为双键
+p-=O,         在 p 号原子上外接双键氧
+p-^X,         replace: 用 X 的入口原子替代 p 号原子
+p-[CPO],      外接结构化 CPO 片段
+p-^[CPO],     用结构化 CPO 的入口原子替代 p 号原子
+\end{lstlisting}
+
+\verb|p-X| 和 \verb|p-^X| 的区别是语言设计中的关键点。前者在原子 $p$ 外新增取代基，原子 $p$ 保持不变；后者将 $p$ 号原子本身替换为 $X$ 的入口原子，并保留 $p$ 原有的键。例如：
+
+\begin{lstlisting}[language=mychem]
+(0)6R,1-O,(0);     # 在 1 号碳上外接氧
+(0)6R,1-^O,(0);    # 将 1 号碳替换为氧杂原子
+\end{lstlisting}
+
+结构化取代基使用方括号包围一个完整 CPO：
+
+\begin{lstlisting}[language=mychem]
+(0)6R,3-[(1)COH,(0)],(0);
+\end{lstlisting}
+
+组取代基要求非零左接口唯一，从而确定该组连接到母体的位置。
+
+\section{词法与语法分析实现}
+
+\subsection{词法分析}
+
+词法分析器按最长匹配规则识别关键字。由于 \verb|OMe|、\verb|OPh|、\verb|OH| 与单原子 \verb|O| 共享前缀，关键字表将长关键字排在短关键字之前，避免将 \verb|OMe| 错误拆成 \verb|O| 与标识符。
+
+当前 token 类型包括：
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\toprule
+Token & 例子 & 用途 \\
+\midrule
+\verb|Sep| & \verb|,| & 分隔接口编号或取代项 \\
+\verb|Semi| & \verb|;| & 结束一个 CPO \\
+\verb|LParen/RParen| & \verb|(|, \verb|)| & 直接连边接口 \\
+\verb|LBrace/RBrace| & \verb|{|, \verb|}| & 共用原子接口 \\
+\verb|LStr/RStr| & \verb|[|, \verb|]| & 结构化取代基 \\
+\verb|Keyword| & \verb|Ph|, \verb|=O| & 化学片段关键字 \\
+\verb|Digit| & \verb|0|, \verb|12| & 局部位置编号 \\
+\verb|Haf| & \verb|-| & 位置与取代基之间的连接标记 \\
+\verb|Caret| & \verb|^| & 原子替换标记 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+词法阶段也承担部分早期错误检查。例如当读到数字后紧跟大写字母且不是 \verb|R| 或 \verb|L| 时，直接拒绝 \verb|5O| 这类旧补丁语法，并提示用户改用 \verb|5-^O|。
+
+\subsection{递归下降 Parser}
+
+Parser 使用手写递归下降实现。每个非终结符对应一个解析函数，例如 \verb|parseCpd|、\verb|parseCpo|、\verb|parseInterface|、\verb|parseSubs|、\verb|parseCore|。该选择的原因是：语言规模小、文法结构清晰，并且手写 parser 便于给出面向 DSL 用户的错误信息。
+
+AST 的核心数据结构包括：
+\begin{itemize}[leftmargin=2em]
+  \item \verb|Cpd|：完整程序，由多个 CPO 组成；
+  \item \verb|Cpo|：左接口、核心、取代基、右接口；
+  \item \verb|Interface|：接口编号与接口类型 \verb|Connect/Fuse|；
+  \item \verb|Core|：关键字序列；
+  \item \verb|Subs|：取代基链表，记录 attach、replace、group 等信息。
+\end{itemize}
+
+语法分析只保证输入符合上下文无关结构。诸如接口编号是否存在、稠合原子类型是否匹配、端基是否继续延展等问题留给语义翻译阶段检查。
+
+\section{IR 与语义设计}
+
+\subsection{IR 节点}
+
+IR 是显式无序连接图。每个节点表示一个原子：
+
+\begin{lstlisting}
+ATOM(self_id, conn1, conn2, conn3, conn4, conn5, conn6)
+\end{lstlisting}
+
+\verb|self_id| 是唯一原子编号；\verb|conn_i| 是相邻原子编号，\verb|0| 表示空连接槽。键阶通过重复邻接点表示：单键出现一次，双键出现两次，三键出现三次。例如 \verb|O(3,2,2,0,0,0,0)| 表示 3 号氧与 2 号原子形成双键。
+
+\subsection{Fragment 属性}
+
+AST 到 IR 的翻译以 \verb|Fragment| 为核心综合属性：
+
+\begin{lstlisting}
+Fragment {
+  vector<IrNode> ir;
+  int entry;
+  optional<int> exit;
+  int entryBond;
+  vector<int> interfaceL, interfaceR;
+  InterfaceKind interfaceLKind, interfaceRKind;
+  map<int,int> defaultNext;
+}
+\end{lstlisting}
+
+其中：
+\begin{itemize}[leftmargin=2em]
+  \item \verb|entry| 表示片段被外部接入时使用的入口；
+  \item \verb|exit| 表示线性拼接时的出口，\verb|nullopt| 表示端基，不可继续作为 CORE 尾部延展；
+  \item \verb|entryBond| 表示外部连接到入口时使用的键阶；
+  \item \verb|interfaceL/interfaceR| 保存 CPO 左右接口编号；
+  \item \verb|interfaceLKind/interfaceRKind| 保存接口语义，即直接连边或共用原子；
+  \item \verb|defaultNext| 保存 \verb|p-=| 这类内部升键操作的默认目标。
+\end{itemize}
+
+\subsection{关键语义操作}
+
+翻译器定义若干基本图操作：
+\begin{itemize}[leftmargin=2em]
+  \item \verb|shift(F, k)|：将片段中所有非零 id 和连接编号平移 $k$，避免合并时编号冲突；
+  \item \verb|appendIr|：合并两个不冲突的 IR 节点集合；
+  \item \verb|link(a,b,order)|：插入指定键阶的双向连接；
+  \item \verb|ensureBond|：将已有键提升到指定键阶；
+  \item \verb|rewrite(alias)|：在稠合或替换时重写原子编号。
+\end{itemize}
+
+这些操作共同保证 IR 始终保持双向连接一致性，并在连接槽不足时报告 valence overflow。
+
+\section{AST 到 IR 的翻译}
+
+\subsection{核心片段翻译}
+
+每个关键字首先由 \verb|Keyword.cpp| 翻译为基本片段。例如：
+\begin{itemize}[leftmargin=2em]
+  \item \verb|C|、\verb|O|、\verb|N| 等单原子关键字翻译为单节点片段；
+  \item \verb|Me|、\verb|OH|、\verb|NH2| 翻译为预定义官能团；
+  \item \verb|nR| 翻译为 $n$ 元环，并建立环上 \verb|defaultNext|；
+  \item \verb|nL| 翻译为 $n$ 原子链；
+  \item \verb|=| 和 \verb|#| 不产生独立节点，而是作为后续连接的键阶修饰。
+\end{itemize}
+
+当 CORE 包含多个关键字时，翻译器从左到右合并片段。若左侧片段 \verb|exit = nullopt|，说明该片段是端基，不能继续作为线性 CORE 的左侧延展，此时翻译器报错。
+
+\subsection{取代基翻译}
+
+对于普通取代 \verb|p-X|，翻译器执行：
+\begin{enumerate}[leftmargin=2em]
+  \item 翻译 $X$ 为片段 $S$；
+  \item 将 $S$ 的编号平移到不与母体冲突；
+  \item 找到 $S$ 的入口；
+  \item 将母体 $p$ 与入口按 \verb|entryBond| 相连；
+  \item 合并 $S$ 的 IR 和 \verb|defaultNext|。
+\end{enumerate}
+
+对于原子替换 \verb|p-^X|，翻译器不新增一条外部键，而是把 $X$ 的入口原子映射到母体 $p$：
+\begin{enumerate}[leftmargin=2em]
+  \item 要求 $p$ 在母体中存在，且 $X$ 的 IR 非空；
+  \item 翻译并平移 $X$；
+  \item 选取 $X$ 的入口原子；
+  \item 将母体 $p$ 的元素类型替换为入口原子的元素类型；
+  \item 保留 $p$ 的原有连接；
+  \item 将 $X$ 中除入口外的节点和内部键合并到母体。
+\end{enumerate}
+
+该设计使氧杂、氮杂、硫杂等环内原子替换可以统一写成 \verb|p-^O|、\verb|p-^N|、\verb|p-^S|，避免引入 \verb|5O| 这类临时补丁语法。
+
+\subsection{CPO 间连接与稠合}
+
+相邻 CPO 的组合由左片段右接口和右片段左接口决定。若二者括号类型不同，翻译器报错。
+
+\paragraph{直接连边。}
+当接口类型为 \verb|Connect| 时，要求两侧接口长度相等且不含 0。翻译器平移右片段编号，合并 IR，并对每一对对应接口原子调用 \verb|link|：
+\[
+  \forall i,\quad
+  \operatorname{link}(A.\mathrm{interfaceR}_i, B.\mathrm{interfaceL}_i, B.\mathrm{entryBond}).
+\]
+
+\paragraph{共用原子稠合。}
+当接口类型为 \verb|Fuse| 时，要求两侧各有两个非零接口。翻译器构造别名映射：
+\[
+  B.\mathrm{interfaceL}_1 \mapsto A.\mathrm{interfaceR}_1,\quad
+  B.\mathrm{interfaceL}_2 \mapsto A.\mathrm{interfaceR}_2.
+\]
+随后将右片段所有节点与边通过该映射重写并合并。若同一个 IR id 对应的原子类型不一致，例如一个是 \verb|N| 而另一个是 \verb|C|，则报告 ``Fuse atom mismatch''。这可以阻止不合理的稠合表达式静默生成错误结构。
+
+\section{渲染后端}
+
+\subsection{IR 到分子对象}
+
+渲染模块首先从 IR 中恢复边集合，并根据重复连接次数计算键阶。若启用 RDKit，系统将 IR 降低为 \verb|RDKit::RWMol|：
+\begin{enumerate}[leftmargin=2em]
+  \item 根据 IR 节点元素类型创建 RDKit Atom；
+  \item 根据 IR 边集合创建 RDKit Bond；
+  \item 调用 \verb|updatePropertyCache(false)|；
+  \item 调用 RDKit 2D 坐标生成；
+  \item 使用 \verb|MolDraw2DSVG| 输出 SVG。
+\end{enumerate}
+
+Before constructing the drawable molecule, the renderer performs a display-only nitrogen completion pass. For each nitrogen atom, it sums incident bond orders; if the sum is below three, explicit hydrogen atoms are added to the render graph until the displayed nitrogen reaches valence three. This pass is intentionally placed in the rendering backend, so the compiler IR printed by the parser remains unchanged.
+
+RDKit 后端的优点是布局质量高、能处理常见化学绘图约定；缺点是依赖外部库。项目的 CMake 配置中对 RDKit 采用手动库发现，以规避部分系统包导出的 CMake target 引用缺失 NumPy 或 Cairo 路径的问题。
+
+\subsection{内置 SVG fallback}
+
+当 RDKit 不可用时，系统使用内置 SVG renderer。该 renderer 从 IR 构造节点和边，进行简化的 2D 布局，并输出 SVG。它的作用是保证编译链条可运行和便于调试，但复杂多环体系的排版质量弱于 RDKit。
+
+\section{前后端划分与集成}
+
+项目将可复用逻辑封装在 \verb|compiler_core| 静态库中。其上有多个入口：
+\begin{itemize}[leftmargin=2em]
+  \item \verb|tokenizer|：命令行词法调试工具；
+  \item \verb|parser|：命令行完整编译与渲染工具，会打印 token、AST、IR 和 SVG；
+  \item \verb|chem_http_server|：监听本地端口 \verb|127.0.0.1:17654|，提供 \verb|POST /render|；
+  \item \verb|chem_native_host|：Chrome/Edge native messaging 备用入口。
+\end{itemize}
+
+浏览器插件属于前端外壳。其任务是在网页 DOM 中识别 \verb|<my-Chem>| 标签或被 HTML 转义显示的 my-Chem 文本，提取 DSL 内容，通过 HTTP 调用本地 C++ 服务，并用返回的 SVG 替换原位置。插件侧不实现化学语义，避免前后端重复逻辑；所有语法和语义错误均由后端统一返回。对于单个标签解析失败的情况，插件应跳过该标签并继续处理其它标签，以保证页面鲁棒性。
+
+\section{实现特点与错误处理}
+
+当前实现具有以下特点：
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{语法和语义分离}：Parser 只构造 AST，AST 到 IR 的化学语义在 \verb|Translation.cpp| 中集中处理。
+  \item \textbf{关键字扩展集中化}：预定义官能团和片段在 \verb|Keyword.cpp| 中实现，便于后续加入新的官能团。
+  \item \textbf{显式接口语义}：圆括号与花括号分别对应直接连边和共用原子，避免通过接口数量隐式推断连接方式。
+  \item \textbf{端基控制}：\verb|exit = nullopt| 用于表示不可继续延展的端基，防止非法拼接。
+  \item \textbf{替换语义统一}：\verb|p-^X| 覆盖杂原子替换和结构化替换，删除临时补丁语法。
+  \item \textbf{早期错误提示}：例如 tokenizer 阶段拒绝 \verb|5O|，translation 阶段拒绝接口类型不匹配和稠合原子类型不匹配。
+\end{itemize}
+
+\section{实验设计建议}
+
+后续实验可以围绕“这种 DSL 是否比直接让大模型输出其它结构表示更可靠”展开。建议至少包含以下四组对比：
+
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{LLM 直接输出 SVG}：提示模型直接画出分子键线式 SVG。
+  \item \textbf{LLM 输出 SMILES}：提示模型输出 SMILES，再由 RDKit 渲染。
+  \item \textbf{LLM 输出 my-Chem DSL}：提示模型根据本文 DSL 输出表达式，再由本系统编译渲染。
+  \item \textbf{人工书写 my-Chem DSL}：由熟悉语法的人手写 DSL，作为该语言表达能力和上限的参考。
+\end{enumerate}
+
+\subsection{测试集}
+
+测试集可按复杂度分层：
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{基础官能团与小分子}：羟基、氨基、羰基、卤代物、简单链和简单环；
+  \item \textbf{标准生物分子}：20 种氨基酸；
+  \item \textbf{中等复杂天然产物或营养物质}：维生素 C、维生素 D、胡萝卜素、叶黄素；
+  \item \textbf{复杂骨架}：B12 的卟啉/咕啉近似结构、叶绿素近似结构、雪卡毒素阶梯醚、紫杉醇骨架；
+  \item \textbf{专门语义挑战集}：稠合环、直接双接口连边、杂原子替换、端基拼接、结构化取代基。
+\end{itemize}
+
+\subsection{评价指标}
+
+建议使用如下指标：
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{语法有效率}：输出能否被对应系统解析；
+  \item \textbf{渲染成功率}：能否成功生成非空 SVG；
+  \item \textbf{结构正确率}：由人工或规则检查关键连接、官能团、环稠合、杂原子位置是否正确；
+  \item \textbf{局部可修复性}：当结果错误时，需要修改多少字符或多少局部片段即可修复；
+  \item \textbf{输出稳定性}：同一 prompt 重复采样时结构是否一致；
+  \item \textbf{延迟}：从文本到 SVG 的端到端耗时；
+  \item \textbf{错误可诊断性}：系统能否给出可定位的 parser/translation 错误，而不是生成不可解释的错误图像。
+\end{itemize}
+
+\subsection{实验流程}
+
+对每个目标分子，设计统一的自然语言 prompt，让同一个大模型分别在 SVG、SMILES、my-Chem 三种条件下输出结果。每个条件重复采样 $k$ 次，例如 $k=5$。人工 DSL 条件由作者或受试者书写一次或多次。随后：
+\begin{enumerate}[leftmargin=2em]
+  \item 记录原始输出；
+  \item 对 SVG 条件检查 SVG 是否语法有效、是否能显示；
+  \item 对 SMILES 条件调用 RDKit 解析和渲染；
+  \item 对 my-Chem 条件调用本编译器；
+  \item 根据预定义 rubric 标注错误类型；
+  \item 统计每组的有效率、正确率、平均修复代价和延迟。
+\end{enumerate}
+
+\subsection{错误类型标注}
+
+建议将错误分为：
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{格式错误}：标签、SVG、SMILES 或 DSL 格式不合法；
+  \item \textbf{语法错误}：DSL 或 SMILES 无法解析；
+  \item \textbf{语义错误}：接口编号不存在、稠合类型不匹配、端基非法延展；
+  \item \textbf{结构错误}：官能团缺失、杂原子位置错误、环大小错误、键阶错误；
+  \item \textbf{绘图错误}：结构图可解析但布局严重重叠、不可读；
+  \item \textbf{不可修复错误}：输出与目标结构差异过大，需要重写。
+\end{itemize}
+
+\subsection{可选用户实验}
+
+若报告目标偏 HCI 或 demo，可以增加小规模用户实验：给参与者若干分子修改任务，例如“把苯环 1 位改成 N”、“给 3 位加羟基”、“把两个环改成稠合”。比较使用 my-Chem DSL、SMILES 和直接编辑 SVG 的完成时间、成功率和主观难度。这能体现 DSL 的可编辑性和可解释性。
+
+\section{小结}
+
+本文技术模块描述了 my-Chem DSL 的语法、语义、AST 到 IR 翻译和前后端实现。系统的核心思想是将面向大模型或人工书写的分子表达转化为可检查、可调试、可渲染的中间图表示。后续工作将补充研究动机、系统性实验和定量结果，以验证该 DSL 在大模型化学结构输出场景中的可靠性与可用性。
+
+\end{document}

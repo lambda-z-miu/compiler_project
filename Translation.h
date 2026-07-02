@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Ast.h"
+
 #include <array>
 #include <initializer_list>
 #include <iosfwd>
@@ -7,8 +9,6 @@
 #include <optional>
 #include <string>
 #include <vector>
-
-struct Cpd;
 
 struct IrNode {
 	std::string atom;
@@ -23,6 +23,8 @@ struct Fragment {
 	int entryBond = 1;
 	std::vector<int> interfaceL;
 	std::vector<int> interfaceR;
+	InterfaceKind interfaceLKind = InterfaceKind::Connect;
+	InterfaceKind interfaceRKind = InterfaceKind::Connect;
 	std::map<int, int> defaultNext;
 };
 

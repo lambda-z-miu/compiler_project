@@ -7,7 +7,10 @@
 6) RPAREN = )
 7) LSTR = [
 8) RSTR = ]
-9) digit = [0-9][0-9]*
-10) HAF = -
-11) CARET = ^
+9) LBRACE = {
+10) RBRACE = }
+11) digit = [0-9][0-9]*
+12) HAF = -
+13) CARET = ^
+Only digitR and digitL are numbered keywords. Numbered atom patch syntax such as 5O, 4N, or 3S is not supported; use position-^X replacement syntax, for example 5-^O.
 忽略换行符、空格
