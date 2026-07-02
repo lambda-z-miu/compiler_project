@@ -1,4 +1,28 @@
+# Local editor state
+.vscode/
+
+# CMake generated files
+/build/
+/CMakeFiles/
+/CMakeCache.txt
+/Makefile
+/cmake_install.cmake
+/compile_commands.json
+
+# Local build outputs
+/bin/
 /parser
 /tokenizer
-/CMakeFiles/
-.vscode/*
+/chem_http_server
+/chem_native_host
+/libcompiler_core.a
+
+# Native binaries and archives
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+*.out

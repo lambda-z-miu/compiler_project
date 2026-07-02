@@ -1,7 +1,0 @@
-/home/heziy/compiler_project/build/CMakeFiles/compiler_core.dir
-/home/heziy/compiler_project/build/CMakeFiles/tokenizer.dir
-/home/heziy/compiler_project/build/CMakeFiles/parser.dir
-/home/heziy/compiler_project/build/CMakeFiles/chem_native_host.dir
-/home/heziy/compiler_project/build/CMakeFiles/chem_http_server.dir
-/home/heziy/compiler_project/build/CMakeFiles/edit_cache.dir
-/home/heziy/compiler_project/build/CMakeFiles/rebuild_cache.dir
