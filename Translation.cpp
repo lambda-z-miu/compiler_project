@@ -16,6 +16,7 @@ namespace {
 struct SubEntry {
 	std::vector<int> poses;
 	Fragment frag;
+	bool replace = false;
 };
 
 Fragment translateCpo(const Cpo& cpo);
@@ -337,6 +338,73 @@ Fragment attachMany(Fragment frag, const std::vector<int>& poses, const Fragment
 	}
 	return frag;
 }
+Fragment replaceFragment(Fragment frag, int pose, const Fragment& sub) {
+	if (pose == 0 || !hasNode(frag.ir, pose)) {
+		throw std::runtime_error("Unknown replace pose " + std::to_string(pose));
+	}
+	if (sub.ir.empty()) {
+		throw std::runtime_error("Cannot replace an atom with an empty bond-only fragment");
+	}
+
+	Fragment shifted = shiftFragment(sub, maxId(frag));
+	std::vector<int> ports = nonZero(shifted.interfaceL);
+	int entry = 0;
+	if (!ports.empty()) {
+		if (ports.size() != 1) {
+			throw std::runtime_error("Replacement group must have exactly one non-zero left interface");
+		}
+		entry = ports.front();
+	} else {
+		entry = shifted.entry;
+	}
+	if (entry == 0) {
+		throw std::runtime_error("Replacement fragment has no entry node");
+	}
+
+	IrNode* target = findNode(frag.ir, pose);
+	IrNode* replacement = findNode(shifted.ir, entry);
+	if (!target || !replacement) {
+		throw std::runtime_error("Replacement entry node is missing");
+	}
+	target->atom = replacement->atom;
+
+	std::map<int, int> aliases{{entry, pose}};
+	for (const auto& node : shifted.ir) {
+		int rewrittenId = rewriteId(node.id, aliases);
+		if (rewrittenId == pose) {
+			continue;
+		}
+		if (hasNode(frag.ir, rewrittenId)) {
+			throw std::runtime_error("Replacement creates duplicate IR node id " + std::to_string(rewrittenId));
+		}
+		frag.ir.push_back(makeNode(node.atom, rewrittenId, {}));
+	}
+
+	std::map<std::pair<int, int>, int> edgeOrder;
+	for (const auto& node : shifted.ir) {
+		int a = rewriteId(node.id, aliases);
+		for (int conn : node.conn) {
+			int b = rewriteId(conn, aliases);
+			if (a == 0 || b == 0 || a >= b) {
+				continue;
+			}
+			++edgeOrder[{a, b}];
+		}
+	}
+
+	for (const auto& [edge, order] : edgeOrder) {
+		ensureBond(frag, edge.first, edge.second, order);
+	}
+	mergeDefaultNext(frag.defaultNext, rewriteDefaultNext(shifted.defaultNext, aliases));
+	return frag;
+}
+
+Fragment replaceMany(Fragment frag, const std::vector<int>& poses, const Fragment& sub) {
+	for (int pose : poses) {
+		frag = replaceFragment(std::move(frag), pose, sub);
+	}
+	return frag;
+}
 
 Fragment fuseFragments(Fragment left, Fragment right) {
 	Fragment shifted = shiftFragment(std::move(right), maxId(left));
@@ -438,7 +506,7 @@ std::vector<SubEntry> translateSubs(const Subs& subs) {
 		return entries;
 	}
 	if (subs.kind == Subs::Kind::BareSub) {
-		entries.push_back(SubEntry{{1}, translateSub(subs.bareSub)});
+		entries.push_back(SubEntry{{1}, translateSub(subs.bareSub), false});
 		return entries;
 	}
 
@@ -451,7 +519,7 @@ std::vector<SubEntry> translateSubs(const Subs& subs) {
 	} else {
 		frag = translateSub(subs.sub);
 	}
-	entries.push_back(SubEntry{subs.poses.values, std::move(frag)});
+	entries.push_back(SubEntry{subs.poses.values, std::move(frag), subs.replace});
 
 	if (subs.next) {
 		std::vector<SubEntry> nextEntries = translateSubs(*subs.next);
@@ -469,7 +537,11 @@ Fragment translateCpo(const Cpo& cpo) {
 
 	std::vector<SubEntry> entries = translateSubs(cpo.subs);
 	for (const auto& entry : entries) {
-		frag = attachMany(std::move(frag), entry.poses, entry.frag);
+		if (entry.replace) {
+			frag = replaceMany(std::move(frag), entry.poses, entry.frag);
+		} else {
+			frag = attachMany(std::move(frag), entry.poses, entry.frag);
+		}
 	}
 
 	frag.entry = firstNonZero(frag.interfaceL);

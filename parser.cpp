@@ -58,7 +58,7 @@ static void printSubs(const Subs& subs, int indent) {
 	}
 
 	printIndent(indent);
-	std::cout << "Subs: entry\n";
+	std::cout << "Subs: entry" << (subs.replace ? " replace" : " attach") << "\n";
 	printPoses(subs.poses, indent + 2);
 	if (subs.isGroup) {
 		printIndent(indent + 2);

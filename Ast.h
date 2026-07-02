@@ -40,6 +40,7 @@ struct Subs {
 	Sub bareSub;
 	Poses poses;
 	bool isGroup = false;
+	bool replace = false;
 	Sub sub;
 	std::unique_ptr<Cpo> group;
 	std::unique_ptr<Subs> next;

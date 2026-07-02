@@ -22,6 +22,7 @@ std::vector<Token> Tokenizer::tokenize() {
 		if (c == '[') { out.push_back(make(TokenType::LStr, "[")); advance(); continue; }
 		if (c == ']') { out.push_back(make(TokenType::RStr, "]")); advance(); continue; }
 		if (c == '-') { out.push_back(make(TokenType::Haf, "-")); advance(); continue; }
+		if (c == '^') { out.push_back(make(TokenType::Caret, "^")); advance(); continue; }
 
 		if (auto kw = matchKeyword(); !kw.empty()) {
 			out.push_back(make(TokenType::Keyword, kw));
@@ -90,7 +91,7 @@ Token Tokenizer::make(TokenType type, const std::string& lexeme) const {
 std::string Tokenizer::matchKeyword() const {
 	// longest match first
 	static const std::string keywords[] = {
-		"OMe", "OPh", "Ind", "Pyr", "Ox5", "NH2", "=O", "Ph", "Me", "Ac", "Cl", "Br", "OH", "SH", "Im", "=", "#", "C", "P", "N", "S", "F", "I"
+		"OMe", "OPh", "Ind", "Pyr", "Ox5", "NH2", "=O", "Ph", "Me", "Ac", "Cl", "Br", "OH", "SH", "Im", "=", "#", "C", "P", "O", "N", "S", "F", "I"
 	};
 
 	// digitR / digitL (digit can be multiple characters)
@@ -127,6 +128,7 @@ const char* tokenTypeName(TokenType type) {
 		case TokenType::Identifier: return "Identifier";
 		case TokenType::Digit: return "Digit";
 		case TokenType::Haf: return "Haf";
+		case TokenType::Caret: return "Caret";
 		case TokenType::End: return "End";
 	}
 	return "Unknown";

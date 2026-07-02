@@ -15,6 +15,7 @@ enum class TokenType {
 	Identifier, // [A-Z][A-Z]*
 	Digit,      // [0-9][0-9]*
 	Haf,        // -
+	Caret,      // ^
 	End
 };
 

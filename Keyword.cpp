@@ -311,7 +311,7 @@ KeywordInfo translateKeyword(const std::string& lexeme) {
 		kw.frag = makeOx5();
 		return kw;
 	}
-	if (lexeme == "C" || lexeme == "P" || lexeme == "N" || lexeme == "S") {
+	if (lexeme == "C" || lexeme == "P" || lexeme == "O" || lexeme == "N" || lexeme == "S") {
 		kw.frag = makeSingleAtom(lexeme);
 		return kw;
 	}

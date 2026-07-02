@@ -89,6 +89,11 @@ Subs Parser::parseSubs() {
 		expect(TokenType::Haf, "Expected '-' after POSES");
 		return parseSubsPrime(std::move(poses));
 	}
+	if (check(TokenType::Caret)) {
+		Poses poses;
+		poses.values.push_back(1);
+		return parseSubsPrime(std::move(poses));
+	}
 	Subs subs;
 	subs.kind = Subs::Kind::Empty;
 	return subs;
@@ -98,6 +103,10 @@ Subs Parser::parseSubsPrime(Poses poses) {
 	Subs subs;
 	subs.kind = Subs::Kind::Entry;
 	subs.poses = std::move(poses);
+	if (check(TokenType::Caret)) {
+		subs.replace = true;
+		advance();
+	}
 	if (check(TokenType::LStr)) {
 		advance();
 		subs.isGroup = true;
@@ -113,7 +122,7 @@ Subs Parser::parseSubsPrime(Poses poses) {
 		subs.sub = parseSub();
 		expect(TokenType::Sep, "Expected ',' after SUB in SUBS'");
 	} else {
-		throw std::runtime_error("Expected SUB or [CPO] after POSES- at position " + std::to_string(peek().pos));
+		throw std::runtime_error("Expected SUB, ^SUB, [CPO], or ^[CPO] after POSES- at position " + std::to_string(peek().pos));
 	}
 
 	Subs nextSubs = parseSubs();

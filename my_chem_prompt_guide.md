@@ -46,7 +46,7 @@ If there are no substitutions, leave the substitution area empty:
 Atoms and simple fragments:
 
 ```txt
-C P N S F Cl Br I
+C P O N S F Cl Br I
 Me Ac NH2 OH SH OMe OPh =O
 ```
 
@@ -70,7 +70,7 @@ Bond modifiers:
 
 `Ox5` is a five-membered oxygen-containing ring. Its atom 1 is O, atoms 2-5 are C.
 
-Important: there is currently no generic `O` atom keyword by itself. Use oxygen through `OH`, `OMe`, `OPh`, `=O`, `Ac`, or `Ox5`.
+`O` is available as a generic oxygen atom keyword. For an oxygen heteroatom inside an existing carbon ring, prefer replacement syntax such as `1-^O` rather than external attachment `1-O`.
 
 ## Local Numbering
 
@@ -115,6 +115,17 @@ Examples:
 `p-=O` attaches a double-bonded oxygen to atom `p`.
 
 `p-=` does not attach a new atom. It upgrades the default internal bond from atom `p` to its default next atom into a double bond.
+
+`p-^X` replaces atom `p` with substituent/group `X` instead of attaching `X` externally. The replaced position keeps its original bonds. The entry atom of `X` occupies the original atom id, and any extra atoms in `X` are merged as part of the same fragment.
+
+Examples:
+
+```txt
+1-^O,       replace atom 1 with oxygen, useful for oxa rings
+2-^N,       replace atom 2 with nitrogen
+3-^OH,      replace atom 3 with oxygen and keep the H from OH
+4-^[(1)COH,(0)],  replace atom 4 with the entry atom of a structured group
+```
 
 Examples:
 
@@ -178,7 +189,7 @@ Two-interface fusion is not a normal bond. It means shared atoms.
 
 ## Important Semantic Pitfalls
 
-`1-N` means attach an external N to atom 1. It does not replace atom 1 with N. To represent heteroatoms inside rings, use existing heterocycle keywords such as `Ox5`, `Pyr`, `Im`, or `Ind`, or state that the structure is an approximation.
+`1-N` means attach an external N to atom 1. It does not replace atom 1 with N. Use `1-^N` to replace atom 1 with N. Use `1-^O` to make an oxa/oxygen heteroatom at atom 1 while preserving the original ring bonds.
 
 `p-=` uses the current CPO local numbering and upgrades the internal default bond `p -> defaultNext[p]`.
 
@@ -259,10 +270,10 @@ Use the grammar:
 CPO = "(" left ")" CORE "," SUBS "(" right ")" ";"
 CPD = one or more CPOs.
 
-Use local atom numbering inside each CPO. Use one-interface connections for normal bonds and two-interface connections for fused rings. Use p-= to upgrade the current CPO internal default bond p->defaultNext[p]. Use p-=O for carbonyl oxygen. Use [CPO] for structured substituents with exactly one nonzero left interface.
+Use local atom numbering inside each CPO. Use one-interface connections for normal bonds and two-interface connections for fused rings. Use p-= to upgrade the current CPO internal default bond p->defaultNext[p]. Use p-=O for carbonyl oxygen. Use p-^X to replace atom p with X instead of attaching X. Use [CPO] for structured substituents with exactly one nonzero left interface.
 
-Available keywords: C, P, N, S, F, Cl, Br, I, Me, Ac, NH2, OH, SH, OMe, OPh, =O, Ph, Im, Ind, Pyr, Ox5, nR, nL, =, #.
+Available keywords: C, P, O, N, S, F, Cl, Br, I, Me, Ac, NH2, OH, SH, OMe, OPh, =O, Ph, Im, Ind, Pyr, Ox5, nR, nL, =, #.
 
-Do not invent unsupported keywords. Do not use 1-N to replace a ring atom; it attaches an external N. If exact ring heteroatom replacement is required but unsupported, make the closest scaffold-level approximation and still produce valid my-Chem.
+Do not invent unsupported keywords. Do not use 1-N to replace a ring atom; it attaches an external N. Use 1-^N or 1-^O for ring-atom replacement/heteroatom substitution.
 ```
 

@@ -45,6 +45,7 @@ Fragment {
 SubEntry {
     poses: list<int>
     frag: Fragment
+    replace: bool          // false: attach; true: ^ replacement
 }
 
 Keyword {
@@ -650,3 +651,33 @@ KEYWORDS -> digit L
 3. 实现 `translateSub/translateSubs/translateCpo`，测试单个 CPO。
 4. 实现 `connectFragments` 的 bridge。
 5. 最后实现 `fuse`，测试 `(4,5);(1,2)` 这种双接口稠合。
+
+## Replacement Substitution: ^X
+
+Syntax extension:
+
+    SUBS_PRIME -> caret SUB sep SUBS
+    SUBS_PRIME -> caret lstr CPO rstr sep SUBS
+
+Concrete expressions:
+
+    p-^X,
+    p1,p2-^X,
+    p-^[CPO],
+
+Semantics:
+
+    replace(F, pose, S):
+        require pose exists in F.IR
+        require S.IR is not empty
+        S = shift(S, maxId(F.IR))
+        entry = first non-zero S.interfaceL if present, otherwise S.entry
+        require entry exists
+        alias[entry] = pose
+        F.IR[pose].atom = S.IR[entry].atom
+        keep all old bonds of pose
+        add all internal bonds of S after rewriting entry to pose
+        F.defaultNext += rewrite(S.defaultNext, alias)
+        return F
+
+p-X attaches X externally to atom p. p-^X replaces atom p with X. For example, 1-N adds an external N substituent, while 1-^N changes atom 1 itself into N and preserves the original bonds at atom 1. Oxygen heteroatoms can be written as 1-^O; replacing with a group such as 1-^OH makes the entry O occupy atom 1 and keeps the attached H.

@@ -1,4 +1,11 @@
 ## test Cases:
+Replacement / hetero atom examples:
+
+```txt
+(0)6R,1-^O,(0);
+(0)6R,1-^OH,(0);
+(0)6R,1-^[(1)COH,(0)],(0);
+```
 
 ```txt
 (0)Ph,1-OH,(0);

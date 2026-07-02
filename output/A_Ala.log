@@ -28,17 +28,17 @@ CPO #1:
   Interface L:
     Poses: 0
   Core: NH2 C C
-  Subs: entry
+  Subs: entry attach
     Poses: 4
     Sub Core:
       Core: Me
     Next:
-      Subs: entry
+      Subs: entry attach
         Poses: 5
         Sub Core:
           Core: =O
         Next:
-          Subs: entry
+          Subs: entry attach
             Poses: 5
             Sub Core:
               Core: OH
