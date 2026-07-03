@@ -14,7 +14,7 @@ The expression is a sequence of CPO fragments. Every CPO ends with `;`.
 
 ```txt
 CPD  := CPO+
-CPO  := INTERFACE CORE "," SUBS INTERFACE ";"
+CPO  := INTERFACE? CORE ("," SUBS?)? INTERFACE? ";"
 INTERFACE := "(" POSES ")" | "{" POSES "}"
 ```
 
@@ -25,7 +25,7 @@ Do not output SMILES. Do not output IR. Do not output SVG.
 A CPO has four parts:
 
 ```txt
-INTERFACE CORE,substitutions INTERFACE;
+INTERFACE? CORE,substitutions INTERFACE?;
 Use round interfaces for direct bonds and brace interfaces for fused/shared atoms.
 ```
 
@@ -42,6 +42,28 @@ If there are no substitutions, leave the substitution area empty:
 ```txt
 (0)Ph,(0);
 ```
+
+The left and right `(0)` empty interfaces may be omitted. These two forms are equivalent:
+
+```txt
+(0)Ph,(0);
+Ph;
+```
+
+The final comma before a right interface may also be omitted. These two forms are equivalent:
+
+```txt
+(0)Ph,4-OH,{1,6};
+Ph,4-OH{1,6};
+```
+
+This relaxation also works inside structured groups:
+
+```txt
+3-[(1)2L,1-#]
+```
+
+means the inner group has an explicit left interface `(1)` and an implicit right interface `(0)`.
 
 ## Available Keywords
 
@@ -223,7 +245,7 @@ Rendering completes under-valent nitrogen atoms with explicit hydrogens. If the 
 
 Do not continue a core after terminal groups such as `Me`, `OH`, `SH`, `OMe`, `OPh`, `Ac`, `=O`, and halogens. Use them as substituents or as the end of a core.
 
-Every CPO must contain the comma after `CORE`, even if there are no substitutions.
+For LLM output, the explicit form is usually easier to debug, but the parser also accepts relaxed empty interfaces: `Ph;` is equivalent to `(0)Ph,(0);`. If a CPO ends with a right interface, the comma immediately before that interface is optional: `Ph,4-OH{1,6};` is equivalent to `(0)Ph,4-OH,{1,6};`.
 
 Adjacent CPO interfaces must use the same bracket kind: round interfaces connect corresponding atoms directly, and brace interfaces fuse by sharing atoms.
 
@@ -295,7 +317,7 @@ Use this instruction:
 You must output only a my-Chem DSL expression wrapped in <my-Chem>...</my-Chem>. Do not output SMILES, IR, SVG, explanation, or markdown.
 
 Use the grammar:
-CPO = INTERFACE CORE "," SUBS INTERFACE ";"; INTERFACE = "(" poses ")" or "{" poses "}"
+CPO = optional INTERFACE, CORE, optional comma/substitutions, optional INTERFACE, then ";"; INTERFACE = "(" poses ")" or "{" poses "}". A missing left or right interface means `(0)`.
 CPD = one or more CPOs.
 
 Use local atom numbering inside each CPO. Use round interfaces `(1,2);(1,2)` to connect corresponding atoms directly. Use brace interfaces `{1,2};{1,2}` for fused/shared atoms. Use p-= to upgrade the current CPO internal default bond p->defaultNext[p]. Use p-=O for carbonyl oxygen. Use p-^X to replace atom p with X instead of attaching X. Use [CPO] for structured substituents with exactly one nonzero left interface.

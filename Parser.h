@@ -22,9 +22,12 @@ private:
 	const Token& expect(TokenType type, const char* message);
 	bool isStartSub() const;
 	bool isStartInterface() const;
+	bool isStartCpo() const;
+	bool isEndOfCpo() const;
 
 	Cpo parseCpo();
 	Interface parseInterface();
+	Interface defaultInterface() const;
 	Poses parsePoses();
 	Subs parseSubs();
 	Subs parseSubsPrime(Poses poses);

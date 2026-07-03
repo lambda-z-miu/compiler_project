@@ -18,7 +18,7 @@ CFG规则：
 1) CPD := CPO semi CPD
         | empty
 
-2) CPO := INTERFACEL CORE SUBS INTERFACER
+2) CPO := INTERFACEL? CORE (sep SUBS?)? INTERFACER?
 3) INTERFACEL := INTERFACE
    INTERFACER := INTERFACE
    INTERFACE := lparen POSES rparen
@@ -47,7 +47,7 @@ CFG(消除左递归、左公因子)
 1) CPD := CPO semi CPD
         | empty
 
-2) CPO := INTERFACEL CORE sep SUBS INTERFACER
+2) CPO := INTERFACEL? CORE (sep SUBS?)? INTERFACER?
 3) INTERFACEL := INTERFACE
    INTERFACER := INTERFACE
    INTERFACE := lparen POSES rparen
@@ -68,3 +68,28 @@ CFG(消除左递归、左公因子)
 9) CORE := keywords CORET
 10) CORET:= empty
         | keywords CORET
+
+## Current relaxed syntax update
+
+The implemented parser now accepts a relaxed surface form:
+
+```txt
+CPD := CPO*
+CPO := INTERFACE? CORE (sep SUBS?)? INTERFACE? semi
+INTERFACE := lparen POSES rparen | lbrace POSES rbrace
+```
+
+Rules:
+
+1) A missing left interface is normalized to `(0)`.
+2) A missing right interface is normalized to `(0)`.
+3) The comma immediately before a right interface is optional.
+4) The same normalization applies inside `[CPO]` group substitutions.
+
+Examples:
+
+```txt
+Ph;                                      // same as (0)Ph,(0);
+Ph,4-OH{1,6};                           // same as (0)Ph,4-OH,{1,6};
+Ph,1-[(1)2L,1-#];                       // inner group right interface defaults to (0)
+```

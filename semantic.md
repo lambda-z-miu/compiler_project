@@ -727,3 +727,15 @@ Fuse semantics for `{a1,a2}{b1,b2}`:
         return A
 
 The old inferred rule is removed: `(1,2);(1,2)` no longer means fused rings. It creates two direct cross-fragment bonds. Use `{1,2};{1,2}` for shared-atom fusion.
+
+## Relaxed Surface Syntax
+
+The parser accepts a shorter user-facing form and normalizes it before translation:
+
+```txt
+Ph;                                      // same as (0)Ph,(0);
+Ph,4-OH{1,6};                           // same as (0)Ph,4-OH,{1,6};
+Ph,1-[(1)2L,1-#];                       // inner group right interface defaults to (0)
+```
+
+This is only syntax sugar. A missing left interface becomes a connect interface with pose `0`, and a missing right interface also becomes `(0)`. The comma immediately before a right interface may be omitted. After parsing, Translation still receives an AST with explicit `Interface` objects on both sides of every CPO, so IR semantics and error checks are unchanged.

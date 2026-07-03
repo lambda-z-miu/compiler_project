@@ -5,6 +5,14 @@ Explicit inter-CPO connection examples:
 (0)2L,(1,2);(1,2)2L,(0);
 (0)6R,{4,5};{1,2}6R,(0);
 ```
+
+Relaxed surface syntax examples:
+
+```txt
+Ph;
+Ph,4-OH{1,6};{1,2}6R{6,5};{1,2}6R{3,4};{1,2}5R,2-Me,3-OH,3-[(1)2L,1-#];
+Ph,1-[(1)2L,1-#];
+```
 Replacement / hetero atom examples:
 
 ```txt

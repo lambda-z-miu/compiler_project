@@ -9,7 +9,7 @@ Parser::Parser(std::vector<Token> tokens) : tokens_(std::move(tokens)) {}
 
 Cpd Parser::parseCpd() {
 	Cpd cpd;
-	while (isStartInterface()) {
+	while (isStartCpo()) {
 		cpd.items.push_back(parseCpo());
 		expect(TokenType::Semi, "Expected ';' after CPO");
 	}
@@ -51,14 +51,35 @@ bool Parser::isStartInterface() const {
 	return check(TokenType::LParen) || check(TokenType::LBrace);
 }
 
+bool Parser::isStartCpo() const {
+	return isStartInterface() || check(TokenType::Keyword);
+}
+
+bool Parser::isEndOfCpo() const {
+	return check(TokenType::Semi) || check(TokenType::RStr) || check(TokenType::End);
+}
+
 Cpo Parser::parseCpo() {
 	Cpo cpo;
-	cpo.left = parseInterface();
+	cpo.left = isStartInterface() ? parseInterface() : defaultInterface();
 	cpo.core = parseCore();
-	expect(TokenType::Sep, "Expected ',' after CORE");
-	cpo.subs = parseSubs();
-	cpo.right = parseInterface();
+
+	if (check(TokenType::Sep)) {
+		advance();
+		if (!isStartInterface() && !isEndOfCpo()) {
+			cpo.subs = parseSubs();
+		}
+	}
+
+	cpo.right = isStartInterface() ? parseInterface() : defaultInterface();
 	return cpo;
+}
+
+Interface Parser::defaultInterface() const {
+	Interface iface;
+	iface.kind = InterfaceKind::Connect;
+	iface.poses.values.push_back(0);
+	return iface;
 }
 
 Interface Parser::parseInterface() {
@@ -129,13 +150,21 @@ Subs Parser::parseSubsPrime(Poses poses) {
 		expect(TokenType::RStr, "Expected ']' after CPO");
 		if (check(TokenType::Sep)) {
 			advance();
-		} else {
+		} else if (isStartInterface() || isEndOfCpo()) {
 			return subs;
+		} else {
+			throw std::runtime_error("Expected ',' after group SUBS' at position " + std::to_string(peek().pos));
 		}
 	} else if (isStartSub()) {
 		subs.isGroup = false;
 		subs.sub = parseSub();
-		expect(TokenType::Sep, "Expected ',' after SUB in SUBS'");
+		if (check(TokenType::Sep)) {
+			advance();
+		} else if (isStartInterface() || isEndOfCpo()) {
+			return subs;
+		} else {
+			throw std::runtime_error("Expected ',' after SUB in SUBS' at position " + std::to_string(peek().pos));
+		}
 	} else {
 		throw std::runtime_error("Expected SUB, ^SUB, [CPO], or ^[CPO] after POSES- at position " + std::to_string(peek().pos));
 	}
